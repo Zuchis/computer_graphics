@@ -37,26 +37,24 @@ static void display()
                     glTranslatef(0.0, 0.0, 0.75);
                     glutSolidSphere(0.75, 20, 20);
             glPopMatrix();
-        //head
         glPushMatrix();
                 glTranslatef(0.0, 0.0, 1.75); 
                 glutSolidSphere(0.25, 20, 20); 
 
-                // Eyes 
                 glColor3f(0.0, 0.0, 0.0);
                 glPushMatrix();
                         glTranslatef(0.0, -0.18, 0.10); 
                         glPushMatrix();
                                 glTranslatef(-0.05, 0.0, 0.0);
-                                glutSolidSphere(0.05, 10, 10); // right eye
+                                glutSolidSphere(0.05, 10, 10);
                         glPopMatrix();
                         glPushMatrix();
                                 glTranslatef(+0.05, 0.0, 0.0);
-                                glutSolidSphere(0.05, 10, 10); // left eye
+                                glutSolidSphere(0.05, 10, 10);
                         glPopMatrix();
                 glPopMatrix();
 
-                // Nose 
+
                 glColor3f(1.0, 0.5, 0.5); 
                 glPushMatrix();
                         glRotatef(90.0, 1.0, 0.0, 0.0); 
