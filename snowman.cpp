@@ -1,8 +1,5 @@
 #include <cstdlib>
-<<<<<<< HEAD
 #include <math.h>
-=======
->>>>>>> 39923f9aaa7061324126575ec17b79cd87a7c1ce
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
@@ -21,7 +18,6 @@ float zoera = 0.0;
 
 static void display()
 {
-<<<<<<< HEAD
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glColor3f(0.9f, 2.0f, 3.0f);
@@ -34,20 +30,6 @@ static void display()
 
     glRotated(zoera, 0, 0, 1);
 
-    //main
-    glPushMatrix();
-        glTranslatef(0.0, 0.0, 0.75);
-        glColor3f(1.0, 1.0, 1.0);
-            glPushMatrix();
-                glTranslatef(0.0, 0.0, 0.75);
-                glutSolidSphere(0.75, 20, 20);
-            glPopMatrix();
-
-            //head
-            glPushMatrix();
-=======
-    glClear(GL_COLOR_BUFFER_BIT);
-    //main
     glPushMatrix();
             glTranslatef(0.0, 0.0, 0.75);
             glColor3f(1.0, 1.0, 1.0);
@@ -57,36 +39,12 @@ static void display()
             glPopMatrix();
         //head
         glPushMatrix();
->>>>>>> 39923f9aaa7061324126575ec17b79cd87a7c1ce
                 glTranslatef(0.0, 0.0, 1.75); 
                 glutSolidSphere(0.25, 20, 20); 
 
                 // Eyes 
                 glColor3f(0.0, 0.0, 0.0);
                 glPushMatrix();
-<<<<<<< HEAD
-                    glTranslatef(0.0, -0.18, 0.10); 
-                    glPushMatrix();
-                        glTranslatef(-0.05, 0.0, 0.0);
-                        glutSolidSphere(0.05, 10, 10); // right eye
-                    glPopMatrix();
-                    glPushMatrix();
-                        glTranslatef(+0.05, 0.0, 0.0);
-                        glutSolidSphere(0.05, 10, 10); // left eye
-                    glPopMatrix();
-                glPopMatrix();
-
-                // Nose 
-            glColor3f(1.0, 0.5, 0.5); 
-            glPushMatrix();
-                glRotatef(90.0, 1.0, 0.0, 0.0); 
-                glutSolidCone(0.08, 0.5, 10, 2); 
-            glPopMatrix();
-        glPopMatrix();
-    glPopMatrix();
-
-    glFlush();
-=======
                         glTranslatef(0.0, -0.18, 0.10); 
                         glPushMatrix();
                                 glTranslatef(-0.05, 0.0, 0.0);
@@ -106,7 +64,8 @@ static void display()
                 glPopMatrix();
         glPopMatrix();
     glPopMatrix();
->>>>>>> 39923f9aaa7061324126575ec17b79cd87a7c1ce
+
+    glFlush();
     glutSwapBuffers();
 }
 
@@ -122,7 +81,6 @@ int main (int argc, char **argv)
     win.field_of_view_angle = 45;
 
     glutInit(&argc, argv);
-<<<<<<< HEAD
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
     glutInitWindowSize(win.width,win.height);
     glutCreateWindow(win.title);
@@ -168,14 +126,6 @@ int main (int argc, char **argv)
 
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 
-=======
-    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
-    glutInitWindowSize(1024,768);
-    glutInitWindowPosition(100,100);
-    glutCreateWindow("Snowman Bolado");
-    glutDisplayFunc(drawDaSnowman);
-    //glClearColor(0.0f,0.0f,0.0f,0.0f);
->>>>>>> 39923f9aaa7061324126575ec17b79cd87a7c1ce
     glutMainLoop();
 
     return 0;
