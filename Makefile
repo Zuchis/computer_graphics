@@ -8,5 +8,5 @@ snowman:
 	$(CC) snowman.cpp -o snowman $(FLAGS)	
 
 clean:
-	rm -f *.o core
+	rm -f *.o *.swp core
 
