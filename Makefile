@@ -1,11 +1,10 @@
-CC = g++
-FLAGS =-lGLU -lGL -lglut
+FLAGS =-lGL -lglut
 
 all:
-	$(CC) blackScreen.cpp -o blackScreen $(FLAGS)	
+	g++ blackScreen.cpp -o blackScreen $(FLAGS)	
 	
 snowman:
-	$(CC) snowman.cpp -o snowman $(FLAGS)	
+	g++ snowman.cpp -o snowman $(FLAGS)	
 
 clean:
 	rm -f *.o *.swp core
