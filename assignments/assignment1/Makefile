@@ -1,7 +1,7 @@
-CC=gcc
-CFLAGS=-c -Wall -Wextra -g -lGL -lGLU -lglut
-CFLAGSL=-lpng
-LDFLAGS=
+CC=g++
+CFLAGS=-c -Wall -g -lGL -lGLU -lglut -lGLEW
+CFLAGSL=-lGL -lGLU -lglut -lGLEW
+LDFLAGS=#-lGL -lGLU -lglut
 
 SOURCES= main.cpp 
 OBJECTS=$(SOURCES:.c=.o)
