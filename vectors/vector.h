@@ -27,6 +27,7 @@ class Vector{
         Vector copy();
         Vector cross(Vector v);
         void normalize();
+        Vector normalized();
         void print();
 };
 

@@ -39,7 +39,9 @@ Vector Vector::operator * (double k){
 }
 
 Vector Vector::operator = (Vector v){
-    return Vector(v.x,v.y,v.z);
+    x = v.x;
+    y = v.y;
+    z = v.z;
 }
 
 bool Vector::operator == (const Vector &u){
@@ -63,6 +65,12 @@ Vector Vector::copy(){
 void Vector::normalize(){
     *this = *this / norm();
     return;
+}
+
+Vector Vector::normalized(){
+    Vector u = copy();
+    u.normalize();
+    return u;
 }
 
 double Vector::dot (Vector v){
