@@ -13,6 +13,12 @@ class Vector{
             z = z1;
         }
 
+        Vector(const Vector &v){
+            x = v.x;
+            y = v.y;
+            z = v.z;
+        }
+
         Vector operator + (Vector v);
         Vector operator + (double k);
         Vector operator - (Vector v);
@@ -24,6 +30,7 @@ class Vector{
         bool operator != (const Vector &u);
         double dot (Vector v);
         double norm();
+        double quadrance();
         Vector copy();
         Vector cross(Vector v);
         void normalize();
@@ -42,6 +49,11 @@ class Vector2{
             y = y1;
         }
 
+        Vector2(const Vector2 &v){
+            x = v.x;
+            y = v.y;
+        }
+
         Vector2 operator + (Vector2 v);
         Vector2 operator + (double k);
         Vector2 operator - (Vector2 v);
@@ -54,9 +66,10 @@ class Vector2{
         double norm();
         Vector2 copy();
         double dot (Vector2 v);
+        double quadrance();
         void normalize();
         Vector2 normalized();
         void print();
-}
+};
 
 #endif
