@@ -56,6 +56,19 @@ int main (){
     std::cout << "v cross u: ";
     (v.cross(u)).print();
 
+    std::cout << std::endl;
+
+    std::cout << "Vector 2D Demonstrations: " << std::endl;
+
+    Vector2 o = Vector2(3.4,2.5);
+    std::cout << "Vector o: ";
+    o.print();
+    std::cout << "Vector o * 3: ";
+    Vector2 q = Vector2(o);
+    q = q + o * 2;
+    q.print();
+    
+
 
     delete w;
         
