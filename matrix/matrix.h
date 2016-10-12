@@ -8,12 +8,6 @@ class Matrix2{
         int height = 2;
 
     public:
-
-        double getElement(int i,int j){
-            int index = i + j * width;
-            return matrix[index];
-        }
-
         Matrix2(){
             matrix = new double[width * height];
             int i, j;
@@ -35,8 +29,8 @@ class Matrix2{
             }
         }
 
-        int getPosition(int,int);
-        //double getElement(int,int);
+        int getPosition(int,int) const;
+        double getElement(int,int) const;
         void setElement(int,int,double);
         void setElement(int,double);
         Matrix2 copy();

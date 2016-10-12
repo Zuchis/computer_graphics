@@ -2,14 +2,14 @@
 #include <cmath>
 #include "matrix.h"
 
-int Matrix2::getPosition(int i, int j){
+int Matrix2::getPosition(int i, int j) const {
     return (i + j * width);
 }
 
-/*double Matrix2::getElement(int i,int j){*/
-    /*int index = getPosition(i, j);*/
-    /*return matrix[index];*/
-/*}*/
+double Matrix2::getElement(int i,int j) const {
+    int index = getPosition(i, j);
+    return matrix[index];
+}
 
 void Matrix2::setElement(int i,int j,double value){
     int index = getPosition(i, j);
