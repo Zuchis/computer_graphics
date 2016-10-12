@@ -42,7 +42,6 @@ Matrix2 Matrix2::copy(){
         }
     }
     return copypasta;
-
 }
 
 Matrix2 Matrix2::translated(){
@@ -56,9 +55,24 @@ Matrix2 Matrix2::translated(){
     }
 }
 
+void Matrix2::print(){
+    std::cout << "|";
+    int i,j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            if(j != width -1)
+                std::cout << getElement(i,j) << ", ";
+            else
+                std::cout << getElement(i,j) << "|" << std::endl;
+        }
+        if(i != height -1)
+            std::cout << "
+    }
+}
 
 
-Matrix2 inverted();
+
+//Matrix2 inverted();
 
 //Matrix2 operator + (Matrix2 m);
 //Matrix2 operator - (Matrix2 m);
