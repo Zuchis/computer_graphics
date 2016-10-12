@@ -8,6 +8,12 @@ class Matrix2{
         int height = 2;
 
     public:
+
+        double getElement(int i,int j){
+            int index = i + j * width;
+            return matrix[index];
+        }
+
         Matrix2(){
             matrix = new double[width * height];
             int i, j;
@@ -30,12 +36,13 @@ class Matrix2{
         }
 
         int getPosition(int,int);
-        double getElement(int,int);
+        //double getElement(int,int);
         void setElement(int,int,double);
         void setElement(int,double);
         Matrix2 copy();
         Matrix2 translated(); 
         Matrix2 inverted();
+        void print();
         
         Matrix2 operator = (Matrix2 m);
         Matrix2 operator + (Matrix2 m);
