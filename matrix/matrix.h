@@ -46,6 +46,7 @@ class Matrix2{
         void setElement(int,double);
         Matrix2 copy();
         Matrix2 translated(); 
+        double determinant();
         Matrix2 inverted();
         void print();
         

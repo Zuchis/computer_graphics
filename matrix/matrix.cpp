@@ -66,18 +66,40 @@ void Matrix2::print(){
                 std::cout << getElement(i,j) << "|" << std::endl;
         }
         if(i != height -1)
-            std::cout << "
+            std::cout << "|";
     }
 }
 
+Matrix2 operator / (double k) {
+    Matrix2 m = Matrix2();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] / k);
+        }
+    }
+    return m;
 
+}
 
-//Matrix2 inverted();
+double Matrix2::determinant()
+
+Matrix2 inverted(){
+    Matrix2 inv = Matrix2();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            copypasta.setElement(index,matrix[index]);
+        }
+    }
+
+}
 
 //Matrix2 operator + (Matrix2 m);
 //Matrix2 operator - (Matrix2 m);
 //Matrix2 operator * (Matrix2 m);
 //Matrix2 operator * (double k);
-//Matrix2 operator / (double k);
 //bool operator == (const Matrix2 &m);
 //bool operator != (const Matrix2 &m);
