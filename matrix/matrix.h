@@ -29,6 +29,17 @@ class Matrix2{
             }
         }
 
+        Matrix2(double values[4]){
+            matrix = new double[width * height];
+            int i, j, index;
+            for(i = 0; i < height; i++){
+                for(j = 0; j < width; j++){
+                    index = i + j * width;
+                    matrix[index] = values[j + i * height];
+                }
+            }
+        }
+
         int getPosition(int,int) const;
         double getElement(int,int) const;
         void setElement(int,int,double);
