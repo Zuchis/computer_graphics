@@ -80,25 +80,97 @@ Matrix2 operator / (double k) {
         }
     }
     return m;
-
 }
 
-double Matrix2::determinant()
-
-Matrix2 inverted(){
-    Matrix2 inv = Matrix2();
+Matrix2 operator * (double k) {
+    Matrix2 m = Matrix2();
     int i, j, index;
     for (i = 0; i < height; i++) {
         for (j = 0; j < width; j++) {
             index = getPosition(i,j);
-            copypasta.setElement(index,matrix[index]);
+            m.setElement(index,matrix[index] * k);
         }
     }
-
+    return m;
 }
 
-//Matrix2 operator + (Matrix2 m);
-//Matrix2 operator - (Matrix2 m);
+Matrix2 operator * (double k) {
+    Matrix2 m = Matrix2();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] / k);
+        }
+    }
+    return m;
+}
+
+Matrix2 operator + (double k) {
+    Matrix2 m = Matrix2();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] + k);
+        }
+    }
+    return m;
+}
+
+Matrix2 operator - (double k) {
+    Matrix2 m = Matrix2();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] - k);
+        }
+    }
+    return m;
+}
+
+Matrix2 operator + (Matrix2 m2) {
+    Matrix2 m = Matrix2();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] + m2.getElement(i,j));
+        }
+    }
+    return m;
+}
+
+Matrix2 operator - (Matrix2 m2) {
+    Matrix2 m = Matrix2();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] - m2.getElement(i,j));
+        }
+    }
+    return m;
+}
+
+double Matrix2::determinant(){
+    double a = getElement(0,0);
+    double b = getElement(0,1);
+    double c = getElement(1,0);
+    double d = getElement(1,1);
+    return (a * d - b * c);
+}
+
+Matrix2 inverted(){
+    Matrix2 inv = Matrix2();
+    inv.setElement(0,0,getElement(1,1));
+    inv.setElement(0,1,getElement(0,1) * -1);
+    inv.setElement(1,0,getElement(1,0) * -1);
+    inv.setElement(1,1,getElement(0,0));
+    return inv / determinant();
+}
+
 //Matrix2 operator * (Matrix2 m);
 //Matrix2 operator * (double k);
 //bool operator == (const Matrix2 &m);
