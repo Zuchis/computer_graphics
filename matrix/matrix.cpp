@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 #include "matrix.h"
 
 int Matrix2::getPosition(int i, int j) const {
@@ -70,7 +71,7 @@ void Matrix2::print(){
     }
 }
 
-Matrix2 operator / (double k) {
+Matrix2 Matrix2::operator / (double k) {
     Matrix2 m = Matrix2();
     int i, j, index;
     for (i = 0; i < height; i++) {
@@ -82,7 +83,7 @@ Matrix2 operator / (double k) {
     return m;
 }
 
-Matrix2 operator * (double k) {
+Matrix2 Matrix2::operator * (double k) {
     Matrix2 m = Matrix2();
     int i, j, index;
     for (i = 0; i < height; i++) {
@@ -94,19 +95,7 @@ Matrix2 operator * (double k) {
     return m;
 }
 
-Matrix2 operator * (double k) {
-    Matrix2 m = Matrix2();
-    int i, j, index;
-    for (i = 0; i < height; i++) {
-        for (j = 0; j < width; j++) {
-            index = getPosition(i,j);
-            m.setElement(index,matrix[index] / k);
-        }
-    }
-    return m;
-}
-
-Matrix2 operator + (double k) {
+Matrix2 Matrix2::operator + (double k) {
     Matrix2 m = Matrix2();
     int i, j, index;
     for (i = 0; i < height; i++) {
@@ -118,7 +107,7 @@ Matrix2 operator + (double k) {
     return m;
 }
 
-Matrix2 operator - (double k) {
+Matrix2 Matrix2::operator - (double k) {
     Matrix2 m = Matrix2();
     int i, j, index;
     for (i = 0; i < height; i++) {
@@ -130,7 +119,7 @@ Matrix2 operator - (double k) {
     return m;
 }
 
-Matrix2 operator + (Matrix2 m2) {
+Matrix2 Matrix2::operator + (Matrix2 m2) {
     Matrix2 m = Matrix2();
     int i, j, index;
     for (i = 0; i < height; i++) {
@@ -142,7 +131,7 @@ Matrix2 operator + (Matrix2 m2) {
     return m;
 }
 
-Matrix2 operator - (Matrix2 m2) {
+Matrix2 Matrix2::operator - (Matrix2 m2) {
     Matrix2 m = Matrix2();
     int i, j, index;
     for (i = 0; i < height; i++) {
@@ -162,7 +151,7 @@ double Matrix2::determinant(){
     return (a * d - b * c);
 }
 
-Matrix2 inverted(){
+Matrix2 Matrix2::inverted(){
     Matrix2 inv = Matrix2();
     inv.setElement(0,0,getElement(1,1));
     inv.setElement(0,1,getElement(0,1) * -1);
@@ -171,7 +160,27 @@ Matrix2 inverted(){
     return inv / determinant();
 }
 
+std::vector<double> Matrix2::row(int r){
+    std::vector<double> elements;
+    int index, j;
+    for (j = 0; j < width; j++) {
+        index = getPosition(r,j);
+        elements.insert(elements.end(),matrix[index]);
+    }
+    return elements;
+}
+
+std::vector<double> Matrix2::column(int col){
+    std::vector<double> elements;
+    int i, index;
+    for (i = 0; i < height; i++) {
+        index = getPosition(i,col);
+        elements.insert(elements.end(),matrix[index]);
+    }
+    return elements;
+}
+
+
 //Matrix2 operator * (Matrix2 m);
-//Matrix2 operator * (double k);
 //bool operator == (const Matrix2 &m);
 //bool operator != (const Matrix2 &m);

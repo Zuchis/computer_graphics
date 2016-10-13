@@ -1,11 +1,14 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <vector>
+
 class Matrix2{
     private:
         double *matrix;
         int width = 2;
         int height = 2;
+        int getPosition(int,int) const;
 
     public:
         Matrix2(){
@@ -40,7 +43,6 @@ class Matrix2{
             }
         }
 
-        int getPosition(int,int) const;
         double getElement(int,int) const;
         void setElement(int,int,double);
         void setElement(int,double);
@@ -52,11 +54,15 @@ class Matrix2{
         
         Matrix2 operator = (Matrix2 m);
         Matrix2 operator + (Matrix2 m);
+        Matrix2 operator + (double k);
         Matrix2 operator - (Matrix2 m);
+        Matrix2 operator - (double k);
         Matrix2 operator * (Matrix2 m);
         Matrix2 operator * (double k);
         Matrix2 operator / (double k);
         bool operator == (const Matrix2 &m);
         bool operator != (const Matrix2 &m);
+        std::vector<double> row(int r);
+        std::vector<double> column(int col);
 };
 #endif
