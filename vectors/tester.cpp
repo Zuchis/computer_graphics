@@ -67,8 +67,21 @@ int main (){
     Vector2 q = Vector2(o);
     q = q + o * 2;
     q.print();
-    
 
+    std::cout << "Greetings, I'm vector 'test': ";
+    Vector test = Vector(1,2,3);
+    test.print();
+    std::cout << "Testing += (1,1,1):" << std::endl;
+    Vector test2 = Vector(1,1,1);
+    test += test2;
+    test.print();    
+    test -= test2;
+
+    std::cout << "Testing *= 2"<< std::endl;
+    test *= 2.0;
+    test.print();
+
+    std::cout << "\nFarewell!\n" << std::endl;
 
     delete w;
         
