@@ -54,6 +54,42 @@ bool Vector::operator != (const Vector &u){
     return !(*this == u);
 }
 
+void Vector::operator += (Vector v){
+    x += v.x;
+    y += v.y;
+    z += v.z;
+}
+
+void Vector::operator += (double k){
+    x += k;
+    y += k;
+    z += k;
+}
+
+void Vector::operator -= (Vector v){
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
+}
+
+void Vector::operator -= (double k){
+    x -= k;
+    y -= k;
+    z -= k;
+}
+
+void Vector::operator *= (double k){
+    x *= k;
+    y *= k;
+    z *= k;
+}
+
+void Vector::operator /= (double k){
+    x /= k;
+    y /= k;
+    z /= k;
+}
+
 double Vector::norm(){
     return sqrt(x * x + y * y + z * z);
 }
@@ -138,6 +174,36 @@ bool Vector2::operator == (const Vector2 &u){
 
 bool Vector2::operator != (const Vector2 &u){
     return !(*this == u);
+}
+
+void Vector2::operator += (Vector2 v){
+    x += v.x;
+    y += v.y;
+}
+
+void Vector2::operator += (double k){
+    x += k;
+    y += k;
+}
+
+void Vector2::operator -= (Vector2 v){
+    x -= v.x;
+    y -= v.y;
+}
+
+void Vector2::operator -= (double k){
+    x -= k;
+    y -= k;
+}
+
+void Vector2::operator *= (double k){
+    x *= k;
+    y *= k;
+}
+
+void Vector2::operator /= (double k){
+    x /= k;
+    y /= k;
 }
 
 double Vector2::norm(){

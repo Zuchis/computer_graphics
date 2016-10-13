@@ -28,6 +28,12 @@ class Vector{
         Vector operator = (Vector v);
         bool operator == (const Vector &u);
         bool operator != (const Vector &u);
+        void operator += (Vector v);
+        void operator += (double k);
+        void operator -= (double k);
+        void operator -= (Vector v);
+        void operator *= (double k);
+        void operator /= (double k);
         double dot (Vector v);
         double norm();
         double quadrance();
@@ -63,6 +69,12 @@ class Vector2{
         Vector2 operator = (Vector2 v);
         bool operator == (const Vector2 &u);
         bool operator != (const Vector2 &u);
+        void operator += (Vector2 v);
+        void operator += (double k);
+        void operator -= (double k);
+        void operator -= (Vector2 v);
+        void operator *= (double k);
+        void operator /= (double k);
         double norm();
         Vector2 copy();
         double dot (Vector2 v);
