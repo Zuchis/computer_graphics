@@ -81,6 +81,8 @@ int main (){
     test *= 2.0;
     test.print();
 
+    std::cout << "\nHere's v: " << v << std::endl;
+
     std::cout << "\nFarewell!\n" << std::endl;
 
     delete w;
