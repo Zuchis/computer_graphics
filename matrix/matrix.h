@@ -43,6 +43,15 @@ class Matrix2{
             }
         }
 
+        Matrix2(double a00, double a01,
+                double a10, double a11){
+            matrix = new double[width * height];
+            matrix[0] = a00;
+            matrix[1] = a10;
+            matrix[2] = a01;
+            matrix[3] = a11;
+        }
+
         double getElement(int,int) const;
         void setElement(int,int,double);
         void setElement(int,double);
