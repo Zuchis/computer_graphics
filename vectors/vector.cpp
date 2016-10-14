@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <limits>
 #include "vector.h"
 
 Vector Vector::operator + (Vector v){
@@ -45,9 +46,13 @@ Vector Vector::operator = (Vector v){
 }
 
 bool Vector::operator == (const Vector &u){
-    return (x == u.x &&
-            y == u.y &&
-            z == u.z);
+    double eps = std::numeric_limits<double>::epsilon();
+    double diff1 = x - u.x;
+    double diff2 = y - u.y;
+    double diff3 = z - u.z;
+    return ((diff1 < eps && -diff1 < eps) &&
+            (diff2 < eps && -diff2 < eps) &&
+            (diff3 < eps && -diff3 < eps));
 }
 
 bool Vector::operator != (const Vector &u){
@@ -127,7 +132,7 @@ Vector Vector::cross (Vector v){
 }
 
 void Vector::print(){
-    std::cout << "( " << x << ", " << y << ", " << z << " )" << std::endl;
+    std::cout << "( " << x << ", " << y << ", " << z << " )";// << std::endl;
 }
 
 // Vector 2D Implementations
@@ -168,8 +173,11 @@ Vector2 Vector2::operator = (Vector2 v){
 }
 
 bool Vector2::operator == (const Vector2 &u){
-    return (x == u.x &&
-            y == u.y);
+    double eps = std::numeric_limits<double>::epsilon();
+    double diff1 = x - u.x;
+    double diff2 = y - u.y;
+    return ((diff1 < eps && -diff1 < eps) &&
+            (diff2 < eps && -diff2 < eps));
 }
 
 bool Vector2::operator != (const Vector2 &u){
