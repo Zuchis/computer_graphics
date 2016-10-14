@@ -20,5 +20,8 @@ int main () {
    std::cout << std::endl;
 
    (n.inverted()).print();
+
+   Matrix2 m2 = Matrix2(1,2,3,4);
+   m2.print();
    
 }
