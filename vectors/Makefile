@@ -3,7 +3,7 @@ CFLAGS= -Wall
 CFLAGSL=
 LDFLAGS=
 
-SOURCES= tester.cpp vector.cpp
+SOURCES= vector.cpp tester.cpp 
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=exec
 
