@@ -43,6 +43,17 @@ class Matrix2{
             }
         }
 
+        Matrix2(std::vector<double> values){
+            matrix = new double[width * height];
+            int i, j, index;
+            for(i = 0; i < height; i++){
+                for(j = 0; j < width; j++){
+                    index = i + j * width;
+                    matrix[index] = values[j + i * height];
+                }
+            }
+        }
+
         Matrix2(double a00, double a01,
                 double a10, double a11){
             matrix = new double[width * height];
