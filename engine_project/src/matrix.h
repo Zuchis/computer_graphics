@@ -2,7 +2,7 @@
 #define MATRIX_H
 
 #include <vector>
-#include "../vectors/vector.h"
+#include "vector.h"
 
 class Matrix2{
     private:

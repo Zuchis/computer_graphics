@@ -3,10 +3,10 @@
 #include <limits>
 #include "vector.h"
 
-std::ostream& operator << (std::ostream& os, const Vector& v){
-    os << "( " << v.x << ", " << v.y << ", " << v.z << " )";
-    return os;
-}
+//std::ostream& operator << (std::ostream& os, const Vector& v){
+    //os << "( " << v.x << ", " << v.y << ", " << v.z << " )";
+    //return os;
+//}
 
 Vector Vector::operator + (Vector v){
     return Vector(x + v.x,
