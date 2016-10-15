@@ -23,5 +23,7 @@ int main () {
 
    Matrix2 m2 = Matrix2(1,2,3,4);
    m2.print();
+
+   (m2 * n).print();
    
 }
