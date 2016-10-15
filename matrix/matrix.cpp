@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <limits>
 #include "matrix.h"
 
 int Matrix2::getPosition(int i, int j) const {
@@ -220,6 +221,6 @@ bool Matrix2::operator == (const Matrix2 &m){
     return true;
 }
 
-bool operator != (const Matrix2 &m){
+bool Matrix2::operator != (const Matrix2 &m){
     return !(*this == m);
 }
