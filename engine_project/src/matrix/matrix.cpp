@@ -204,6 +204,15 @@ Matrix2 Matrix2::operator * (Matrix2 m){
     return mul;
 }
 
+Vector2 Matrix2::operator * (Vector2 v){
+    Vector2 mul = Vector2();
+    int i,j,k,index;
+    double currentValue = 0.0;
+    mul.x = getElement(0,0) * v.x + getElement(0,1) * v.y;
+    mul.y = getElement(1,0) * v.x + getElement(1,1) * v.y;
+    return mul;    
+}
+
 bool Matrix2::operator == (const Matrix2 &m){
     double eps = std::numeric_limits<double>::epsilon();
     int i,j,index;

@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include <vector>
+#include "../vectors/vector.h"
 
 class Matrix2{
     private:
@@ -78,6 +79,7 @@ class Matrix2{
         Matrix2 operator - (Matrix2 m);
         Matrix2 operator - (double k);
         Matrix2 operator * (Matrix2 m);
+        Vector2 operator * (Vector2 v);
         Matrix2 operator * (double k);
         Matrix2 operator / (double k);
         bool operator == (const Matrix2 &m);
