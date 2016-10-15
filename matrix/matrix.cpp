@@ -181,6 +181,45 @@ std::vector<double> Matrix2::column(int col){
 }
 
 
-//Matrix2 operator * (Matrix2 m);
-//bool operator == (const Matrix2 &m);
-//bool operator != (const Matrix2 &m);
+Matrix2 Matrix2::operator * (Matrix2 m){
+    Matrix2 mul = Matrix2();
+    int i,j,k,index;
+    double currentValue = 0.0;
+    std::vector<double> r, c;
+    std::vector<double>::size_type size_;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            r = row(i);
+            c = m.column(j);
+            size_ = c.size();
+            for (k = 0; k < size_; k++) {
+                currentValue += r[k] * c[k];
+            }
+            index = getPosition(i,j);
+            mul.setElement(index,currentValue);
+            currentValue = 0.0;
+        }
+    }
+    return mul;
+}
+
+bool Matrix2::operator == (const Matrix2 &m){
+    double eps = std::numeric_limits<double>::epsilon();
+    int i,j,index;
+    double diff;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            diff = matrix[index] - m.getElement(i,j);
+            if(diff < eps && -diff < eps)
+                continue;
+            else
+                return false;
+        }
+    }
+    return true;
+}
+
+bool operator != (const Matrix2 &m){
+    return !(*this == m);
+}
