@@ -25,5 +25,9 @@ int main () {
    m2.print();
 
    (m2 * n).print();
+
+   Vector2 v = Vector2(1,2);
+
+   (m2 * v).print();
    
 }
