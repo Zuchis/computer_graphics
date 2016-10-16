@@ -8,49 +8,49 @@
     //return os;
 //}
 
-Vector Vector::operator + (Vector v){
-    return Vector(x + v.x,
+Vector3 Vector3::operator + (Vector3 v){
+    return Vector3(x + v.x,
                     y + v.y,
                     z + v.z);
 }
 
-Vector Vector::operator + (double k){
-    return Vector(x + k,
+Vector3 Vector3::operator + (double k){
+    return Vector3(x + k,
                     y + k,
                     z + k);
 }
 
-Vector Vector::operator - (Vector v){
-    return Vector(x - v.x,
+Vector3 Vector3::operator - (Vector3 v){
+    return Vector3(x - v.x,
                     y - v.y,
                     z - v.z);
 }
 
-Vector Vector::operator - (double k){
-    return Vector(x - k,
+Vector3 Vector3::operator - (double k){
+    return Vector3(x - k,
                     y - k,
                     z - k);
 }
 
-Vector Vector::operator / (double k){
-    return Vector(x / k,
+Vector3 Vector3::operator / (double k){
+    return Vector3(x / k,
                     y / k,
                     z / k);
 }
 
-Vector Vector::operator * (double k){
-    return Vector(x * k,
+Vector3 Vector3::operator * (double k){
+    return Vector3(x * k,
                     y * k,
                     z * k);
 }
 
-Vector Vector::operator = (Vector v){
+Vector3 Vector3::operator = (Vector3 v){
     x = v.x;
     y = v.y;
     z = v.z;
 }
 
-bool Vector::operator == (const Vector &u){
+bool Vector3::operator == (const Vector3 &u){
     double eps = std::numeric_limits<double>::epsilon();
     double diff1 = x - u.x;
     double diff2 = y - u.y;
@@ -60,83 +60,83 @@ bool Vector::operator == (const Vector &u){
             (diff3 < eps && -diff3 < eps));
 }
 
-bool Vector::operator != (const Vector &u){
+bool Vector3::operator != (const Vector3 &u){
     return !(*this == u);
 }
 
-void Vector::operator += (Vector v){
+void Vector3::operator += (Vector3 v){
     x += v.x;
     y += v.y;
     z += v.z;
 }
 
-void Vector::operator += (double k){
+void Vector3::operator += (double k){
     x += k;
     y += k;
     z += k;
 }
 
-void Vector::operator -= (Vector v){
+void Vector3::operator -= (Vector3 v){
     x -= v.x;
     y -= v.y;
     z -= v.z;
 }
 
-void Vector::operator -= (double k){
+void Vector3::operator -= (double k){
     x -= k;
     y -= k;
     z -= k;
 }
 
-void Vector::operator *= (double k){
+void Vector3::operator *= (double k){
     x *= k;
     y *= k;
     z *= k;
 }
 
-void Vector::operator /= (double k){
+void Vector3::operator /= (double k){
     x /= k;
     y /= k;
     z /= k;
 }
 
-double Vector::norm(){
+double Vector3::norm(){
     return sqrt(x * x + y * y + z * z);
 }
 
-double Vector::quadrance(){
+double Vector3::quadrance(){
     return (x * x + y * y + z * z);
 
 }
 
-Vector Vector::copy(){
-    return Vector(x, y, z);
+Vector3 Vector3::copy(){
+    return Vector3(x, y, z);
 }
 
-void Vector::normalize(){
+void Vector3::normalize(){
     *this = *this / norm();
     return;
 }
 
-Vector Vector::normalized(){
-    Vector u = copy();
+Vector3 Vector3::normalized(){
+    Vector3 u = copy();
     u.normalize();
     return u;
 }
 
-double Vector::dot (Vector v){
+double Vector3::dot (Vector3 v){
     return (x * v.x +
             y * v.y +
             z * v.z);
 }
 
-Vector Vector::cross (Vector v){
-    return Vector(y * v.z - z * v.y,
+Vector3 Vector3::cross (Vector3 v){
+    return Vector3(y * v.z - z * v.y,
                     z * v.x - x * v.z,
                     x * v.y - y * v.x);
 }
 
-void Vector::print(){
+void Vector3::print(){
     std::cout << "( " << x << ", " << y << ", " << z << " )" << std::endl;
 }
 

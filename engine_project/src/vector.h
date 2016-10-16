@@ -1,46 +1,46 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-class Vector{
+class Vector3{
     private:
 
     public:
         double x, y, z;
 
-        Vector(double x1 = 0, double y1 = 0, double z1 = 0){
+        Vector3(double x1 = 0, double y1 = 0, double z1 = 0){
             x = x1;
             y = y1;
             z = z1;
         }
 
-        Vector(const Vector &v){
+        Vector3(const Vector3 &v){
             x = v.x;
             y = v.y;
             z = v.z;
         }
 
-        Vector operator + (Vector v);
-        Vector operator + (double k);
-        Vector operator - (Vector v);
-        Vector operator - (double k);
-        Vector operator / (double k);
-        Vector operator * (double k);
-        Vector operator = (Vector v);
-        bool operator == (const Vector &u);
-        bool operator != (const Vector &u);
-        void operator += (Vector v);
+        Vector3 operator + (Vector3 v);
+        Vector3 operator + (double k);
+        Vector3 operator - (Vector3 v);
+        Vector3 operator - (double k);
+        Vector3 operator / (double k);
+        Vector3 operator * (double k);
+        Vector3 operator = (Vector3 v);
+        bool operator == (const Vector3 &u);
+        bool operator != (const Vector3 &u);
+        void operator += (Vector3 v);
         void operator += (double k);
         void operator -= (double k);
-        void operator -= (Vector v);
+        void operator -= (Vector3 v);
         void operator *= (double k);
         void operator /= (double k);
-        double dot (Vector v);
+        double dot (Vector3 v);
         double norm();
         double quadrance();
-        Vector copy();
-        Vector cross(Vector v);
+        Vector3 copy();
+        Vector3 cross(Vector3 v);
         void normalize();
-        Vector normalized();
+        Vector3 normalized();
         void print();
 };
 
