@@ -233,3 +233,234 @@ bool Matrix2::operator == (const Matrix2 &m){
 bool Matrix2::operator != (const Matrix2 &m){
     return !(*this == m);
 }
+
+// Matrix 3D Implementations
+
+int Matrix3::getPosition(int i, int j) const {
+    return (i + j * width);
+}
+
+double Matrix3::getElement(int i,int j) const {
+    int index = getPosition(i, j);
+    return matrix[index];
+}
+
+void Matrix3::setElement(int i,int j,double value){
+    int index = getPosition(i, j);
+    matrix[index] = value;
+    return;
+}
+
+void Matrix3::setElement(int index, double value){
+    matrix[index] = value;
+    return;
+}
+
+Matrix3 Matrix3::operator = (Matrix3 m){
+    int i,j,index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            matrix[index] = m.getElement(i,j);
+        }
+    }
+}
+
+Matrix3 Matrix3::copy(){
+    Matrix3 copypasta = Matrix3();
+    int i,j,index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            copypasta.setElement(index,matrix[index]);
+        }
+    }
+    return copypasta;
+}
+
+Matrix3 Matrix3::translated(){
+    Matrix3 trans = Matrix3();
+    int i,j,index;
+    for (j = 0; j < height; j++) {
+        for (i = 0; i < width; i++) {
+            index = getPosition(i,j);
+            trans.setElement(i,j,matrix[index]);
+        }
+    }
+}
+
+void Matrix3::print(){
+    std::cout << "|";
+    int i,j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            if(j != width -1)
+                std::cout << getElement(i,j) << ", ";
+            else
+                std::cout << getElement(i,j) << "|" << std::endl;
+        }
+        if(i != height -1)
+            std::cout << "|";
+    }
+}
+
+Matrix3 Matrix3::operator / (double k) {
+    Matrix3 m = Matrix3();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] / k);
+        }
+    }
+    return m;
+}
+
+Matrix3 Matrix3::operator * (double k) {
+    Matrix3 m = Matrix3();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] * k);
+        }
+    }
+    return m;
+}
+
+Matrix3 Matrix3::operator + (double k) {
+    Matrix3 m = Matrix3();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] + k);
+        }
+    }
+    return m;
+}
+
+Matrix3 Matrix3::operator - (double k) {
+    Matrix3 m = Matrix3();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] - k);
+        }
+    }
+    return m;
+}
+
+Matrix3 Matrix3::operator + (Matrix3 m2) {
+    Matrix3 m = Matrix3();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] + m2.getElement(i,j));
+        }
+    }
+    return m;
+}
+
+Matrix3 Matrix3::operator - (Matrix3 m2) {
+    Matrix3 m = Matrix3();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] - m2.getElement(i,j));
+        }
+    }
+    return m;
+}
+
+double Matrix3::determinant(){
+    double det = getElement(0, 0) * (getElement(1, 1) * getElement(2, 2) - getElement(2, 1) * getElement(1, 2)) -
+                 getElement(0, 1) * (getElement(1, 0) * getElement(2, 2) - getElement(1, 2) * getElement(2, 0)) +
+                 getElement(0, 2) * (getElement(1, 0) * getElement(2, 1) - getElement(1, 1) * getElement(2, 0));
+    return det;
+}
+
+Matrix3 Matrix3::inverted(){
+    Matrix3 inv = Matrix3();
+    inv.setElement(0,0,getElement(1,1));
+    inv.setElement(0,1,getElement(0,1) * -1);
+    inv.setElement(1,0,getElement(1,0) * -1);
+    inv.setElement(1,1,getElement(0,0));
+    return inv / determinant();
+}
+
+std::vector<double> Matrix3::row(int r){
+    std::vector<double> elements;
+    int index, j;
+    for (j = 0; j < width; j++) {
+        index = getPosition(r,j);
+        elements.insert(elements.end(),matrix[index]);
+    }
+    return elements;
+}
+
+std::vector<double> Matrix3::column(int col){
+    std::vector<double> elements;
+    int i, index;
+    for (i = 0; i < height; i++) {
+        index = getPosition(i,col);
+        elements.insert(elements.end(),matrix[index]);
+    }
+    return elements;
+}
+
+
+Matrix3 Matrix3::operator * (Matrix3 m){
+    Matrix3 mul = Matrix3();
+    int i,j,k,index;
+    double currentValue = 0.0;
+    std::vector<double> r, c;
+    std::vector<double>::size_type size_;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            r = row(i);
+            c = m.column(j);
+            size_ = c.size();
+            for (k = 0; k < size_; k++) {
+                currentValue += r[k] * c[k];
+            }
+            index = getPosition(i,j);
+            mul.setElement(index,currentValue);
+            currentValue = 0.0;
+        }
+    }
+    return mul;
+}
+
+Vector3 Matrix3::operator * (Vector3 v){
+    Vector3 mul = Vector3();
+    int i,j,k,index;
+    mul.x = getElement(0,0) * v.x + getElement(0,1) * v.y + getElement(0,2) * v.z;
+    mul.y = getElement(1,0) * v.x + getElement(1,1) * v.y + getElement(1,2) * v.z;
+    mul.z = getElement(2,0) * v.x + getElement(2,1) * v.y + getElement(2,2) * v.z;
+    return mul;    
+}
+
+bool Matrix3::operator == (const Matrix3 &m){
+    double eps = std::numeric_limits<double>::epsilon();
+    int i,j,index;
+    double diff;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            diff = matrix[index] - m.getElement(i,j);
+            if(diff < eps && -diff < eps)
+                continue;
+            else
+                return false;
+        }
+    }
+    return true;
+}
+
+bool Matrix3::operator != (const Matrix3 &m){
+    return !(*this == m);
+}
