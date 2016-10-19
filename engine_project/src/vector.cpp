@@ -44,6 +44,14 @@ Vector3 Vector3::operator * (double k){
                     z * k);
 }
 
+Vector3 Vector3::operator * (Matrix3 m){
+    Vector3 mul = Vector3();
+    mul.x = getElement(0,0) * v.x + getElement(1,0) * v.y + getElement(2,0) * v.z;
+    mul.y = getElement(0,1) * v.x + getElement(1,1) * v.y + getElement(2,1) * v.z;
+    mul.z = getElement(0,2) * v.x + getElement(1,2) * v.y + getElement(2,2) * v.z;
+    return mul;    
+}
+
 Vector3 Vector3::operator = (Vector3 v){
     x = v.x;
     y = v.y;

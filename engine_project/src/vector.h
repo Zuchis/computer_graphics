@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include "matrix.h"
+
 class Vector3{
     private:
 
@@ -25,6 +27,7 @@ class Vector3{
         Vector3 operator - (double k);
         Vector3 operator / (double k);
         Vector3 operator * (double k);
+        Vector3 operator * (Matrix3 m);
         Vector3 operator = (Vector3 v);
         bool operator == (const Vector3 &u);
         bool operator != (const Vector3 &u);
