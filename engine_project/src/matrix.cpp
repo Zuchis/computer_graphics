@@ -384,12 +384,21 @@ double Matrix3::determinant(){
 }
 
 Matrix3 Matrix3::inverted(){
-    Matrix3 inv = Matrix3();
-    inv.setElement(0,0,getElement(1,1));
-    inv.setElement(0,1,getElement(0,1) * -1);
-    inv.setElement(1,0,getElement(1,0) * -1);
-    inv.setElement(1,1,getElement(0,0));
-    return inv / determinant();
+    double det = determinant();
+    double inverseDeterminant = 1 / det;
+
+    Matrix3 inverse = Matrix3();
+    inverse.setElement(0, 0,(getElement(1, 1) * getElement(2, 2) - getElement(2, 1) * getElement(1, 2))) * inverseDeterminant;
+    inverse.setElement(0, 1,(getElement(0, 2) * getElement(2, 1) - getElement(0, 1) * getElement(2, 2))) * inverseDeterminant;
+    inverse.setElement(0, 2,(getElement(0, 1) * getElement(1, 2) - getElement(0, 2) * getElement(1, 1))) * inverseDeterminant;
+    inverse.setElement(1, 0,(getElement(1, 2) * getElement(2, 0) - getElement(1, 0) * getElement(2, 2))) * inverseDeterminant;
+    inverse.setElement(1, 1,(getElement(0, 0) * getElement(2, 2) - getElement(0, 2) * getElement(2, 0))) * inverseDeterminant;
+    inverse.setElement(1, 2,(getElement(1, 0) * getElement(0, 2) - getElement(0, 0) * getElement(1, 2))) * inverseDeterminant;
+    inverse.setElement(2, 0,(getElement(1, 0) * getElement(2, 1) - getElement(2, 0) * getElement(1, 1))) * inverseDeterminant;
+    inverse.setElement(2, 1,(getElement(2, 0) * getElement(0, 1) - getElement(0, 0) * getElement(2, 1))) * inverseDeterminant;
+    inverse.setElement(2, 2,(getElement(0, 0) * getElement(1, 1) - getElement(1, 0) * getElement(0, 1))) * inverseDeterminant;
+
+    return inverse;
 }
 
 std::vector<double> Matrix3::row(int r){
