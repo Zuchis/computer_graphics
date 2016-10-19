@@ -181,6 +181,13 @@ Vector2 Vector2::operator * (double k){
                     y * k);
 }
 
+Vector2 Vector2::operator * (Matrix2 m){
+    Vector2 mul = Vector2();
+    mul.x = getElement(0,0) * v.x + getElement(1,0) * v.y;
+    mul.y = getElement(0,1) * v.x + getElement(1,1) * v.y;
+    return mul;    
+}
+
 Vector2 Vector2::operator = (Vector2 v){
     x = v.x;
     y = v.y;

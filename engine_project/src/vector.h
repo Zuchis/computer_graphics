@@ -70,6 +70,7 @@ class Vector2{
         Vector2 operator - (double k);
         Vector2 operator / (double k);
         Vector2 operator * (double k);
+        Vector2 operator * (Matrix2 m);
         Vector2 operator = (Vector2 v);
         bool operator == (const Vector2 &u);
         bool operator != (const Vector2 &u);

@@ -206,8 +206,6 @@ Matrix2 Matrix2::operator * (Matrix2 m){
 
 Vector2 Matrix2::operator * (Vector2 v){
     Vector2 mul = Vector2();
-    int i,j,k,index;
-    double currentValue = 0.0;
     mul.x = getElement(0,0) * v.x + getElement(0,1) * v.y;
     mul.y = getElement(1,0) * v.x + getElement(1,1) * v.y;
     return mul;    
@@ -446,7 +444,6 @@ Matrix3 Matrix3::operator * (Matrix3 m){
 
 Vector3 Matrix3::operator * (Vector3 v){
     Vector3 mul = Vector3();
-    int i,j,k,index;
     mul.x = getElement(0,0) * v.x + getElement(0,1) * v.y + getElement(0,2) * v.z;
     mul.y = getElement(1,0) * v.x + getElement(1,1) * v.y + getElement(1,2) * v.z;
     mul.z = getElement(2,0) * v.x + getElement(2,1) * v.y + getElement(2,2) * v.z;
