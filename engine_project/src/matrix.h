@@ -186,7 +186,7 @@ class Matrix4{
         int getPosition(int,int) const;
 
     public:
-        Matrix3(){
+        Matrix4(){
             matrix = new double[width * height];
             int i, j;
             for(i = 0; i < height; i++){
@@ -196,7 +196,7 @@ class Matrix4{
             }
         }
 
-        Matrix3(const Matrix3 &m){
+        Matrix4(const Matrix4 &m){
             matrix = new double[width * height];
             int i, j, index;
             for(i = 0; i < height; i++){
@@ -207,7 +207,7 @@ class Matrix4{
             }
         }
 
-        Matrix3(double values[16]){
+        Matrix4(double values[16]){
             matrix = new double[width * height];
             int i, j, index;
             for(i = 0; i < height; i++){
@@ -218,7 +218,7 @@ class Matrix4{
             }
         }
 
-        Matrix3(std::vector<double> values){
+        Matrix4(std::vector<double> values){
             matrix = new double[width * height];
             int i, j, index;
             for(i = 0; i < height; i++){
@@ -229,7 +229,7 @@ class Matrix4{
             }
         }
 
-        Matrix3(double a00, double a01, double a02, double a03,
+        Matrix4(double a00, double a01, double a02, double a03,
                 double a10, double a11, double a12, double a03,
                 double a20, double a21, double a22, double a03,
                 double a30, double a31, double a32, double a33){
@@ -255,23 +255,21 @@ class Matrix4{
         double getElement(int,int) const;
         void setElement(int,int,double);
         void setElement(int,double);
-        Matrix3 copy();
-        Matrix3 translated(); 
-        double determinant();
-        Matrix3 inverted();
+        Matrix4 copy();
+        Matrix4 translated(); 
         void print();
         
-        Matrix3 operator = (Matrix3 m);
-        Matrix3 operator + (Matrix3 m);
-        Matrix3 operator + (double k);
-        Matrix3 operator - (Matrix3 m);
-        Matrix3 operator - (double k);
-        Matrix3 operator * (Matrix3 m);
-        Vector3 operator * (Vector3 v);
-        Matrix3 operator * (double k);
-        Matrix3 operator / (double k);
-        bool operator == (const Matrix3 &m);
-        bool operator != (const Matrix3 &m);
+        Matrix4 operator = (Matrix4 m);
+        Matrix4 operator + (Matrix4 m);
+        Matrix4 operator + (double k);
+        Matrix4 operator - (Matrix4 m);
+        Matrix4 operator - (double k);
+        Matrix4 operator * (Matrix4 m);
+        //Vector4 operator * (Vector4 v);
+        Matrix4 operator * (double k);
+        Matrix4 operator / (double k);
+        bool operator == (const Matrix4 &m);
+        bool operator != (const Matrix4 &m);
         std::vector<double> row(int r);
         std::vector<double> column(int col);
 };

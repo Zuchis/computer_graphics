@@ -473,3 +473,218 @@ bool Matrix3::operator == (const Matrix3 &m){
 bool Matrix3::operator != (const Matrix3 &m){
     return !(*this == m);
 }
+
+// Matrix 4D Implementations
+
+int Matrix4::getPosition(int i, int j) const {
+    return (i + j * width);
+}
+
+double Matrix4::getElement(int i,int j) const {
+    int index = getPosition(i, j);
+    return matrix[index];
+}
+
+void Matrix4::setElement(int i,int j,double value){
+    int index = getPosition(i, j);
+    matrix[index] = value;
+    return;
+}
+
+void Matrix4::setElement(int index, double value){
+    matrix[index] = value;
+    return;
+}
+
+Matrix4 Matrix4::operator = (Matrix4 m){
+    int i,j,index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            matrix[index] = m.getElement(i,j);
+        }
+    }
+}
+
+Matrix4 Matrix4::copy(){
+    Matrix4 copypasta = Matrix4();
+    int i,j,index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            copypasta.setElement(index,matrix[index]);
+        }
+    }
+    return copypasta;
+}
+
+Matrix4 Matrix4::translated(){
+    Matrix4 trans = Matrix4();
+    int i,j,index;
+    for (j = 0; j < height; j++) {
+        for (i = 0; i < width; i++) {
+            index = getPosition(i,j);
+            trans.setElement(i,j,matrix[index]);
+        }
+    }
+}
+
+void Matrix4::print(){
+    std::cout << "|";
+    int i,j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            if(j != width -1)
+                std::cout << getElement(i,j) << ", ";
+            else
+                std::cout << getElement(i,j) << "|" << std::endl;
+        }
+        if(i != height -1)
+            std::cout << "|";
+    }
+}
+
+Matrix4 Matrix4::operator / (double k) {
+    Matrix4 m = Matrix4();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] / k);
+        }
+    }
+    return m;
+}
+
+Matrix4 Matrix4::operator * (double k) {
+    Matrix4 m = Matrix4();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] * k);
+        }
+    }
+    return m;
+}
+
+Matrix4 Matrix4::operator + (double k) {
+    Matrix4 m = Matrix4();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] + k);
+        }
+    }
+    return m;
+}
+
+Matrix4 Matrix4::operator - (double k) {
+    Matrix4 m = Matrix4();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] - k);
+        }
+    }
+    return m;
+}
+
+Matrix4 Matrix4::operator + (Matrix4 m2) {
+    Matrix4 m = Matrix4();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] + m2.getElement(i,j));
+        }
+    }
+    return m;
+}
+
+Matrix4 Matrix4::operator - (Matrix4 m2) {
+    Matrix4 m = Matrix4();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            m.setElement(index,matrix[index] - m2.getElement(i,j));
+        }
+    }
+    return m;
+}
+
+std::vector<double> Matrix4::row(int r){
+    std::vector<double> elements;
+    int index, j;
+    for (j = 0; j < width; j++) {
+        index = getPosition(r,j);
+        elements.insert(elements.end(),matrix[index]);
+    }
+    return elements;
+}
+
+std::vector<double> Matrix4::column(int col){
+    std::vector<double> elements;
+    int i, index;
+    for (i = 0; i < height; i++) {
+        index = getPosition(i,col);
+        elements.insert(elements.end(),matrix[index]);
+    }
+    return elements;
+}
+
+
+Matrix4 Matrix4::operator * (Matrix4 m){
+    Matrix4 mul = Matrix4();
+    int i,j,k,index;
+    double currentValue = 0.0;
+    std::vector<double> r, c;
+    std::vector<double>::size_type size_;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            r = row(i);
+            c = m.column(j);
+            size_ = c.size();
+            for (k = 0; k < size_; k++) {
+                currentValue += r[k] * c[k];
+            }
+            index = getPosition(i,j);
+            mul.setElement(index,currentValue);
+            currentValue = 0.0;
+        }
+    }
+    return mul;
+}
+
+//Vector4 Matrix4::operator * (Vector4 v){
+    //Vector3 mul = Vector3();
+    //int i,j,k,index;
+    //mul.x = getElement(0,0) * v.x + getElement(0,1) * v.y + getElement(0,2) * v.z;
+    //mul.y = getElement(1,0) * v.x + getElement(1,1) * v.y + getElement(1,2) * v.z;
+    //mul.z = getElement(2,0) * v.x + getElement(2,1) * v.y + getElement(2,2) * v.z;
+    //return mul;    
+//}
+
+bool Matrix4::operator == (const Matrix4 &m){
+    double eps = std::numeric_limits<double>::epsilon();
+    int i,j,index;
+    double diff;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            diff = matrix[index] - m.getElement(i,j);
+            if(diff < eps && -diff < eps)
+                continue;
+            else
+                return false;
+        }
+    }
+    return true;
+}
+
+bool Matrix4::operator != (const Matrix4 &m){
+    return !(*this == m);
+}
