@@ -4,6 +4,9 @@
 #include <vector>
 #include "vector.h"
 
+class Vector3;
+class Vector2;
+
 class Matrix2{
     private:
         double *matrix;
@@ -230,8 +233,8 @@ class Matrix4{
         }
 
         Matrix4(double a00, double a01, double a02, double a03,
-                double a10, double a11, double a12, double a03,
-                double a20, double a21, double a22, double a03,
+                double a10, double a11, double a12, double a13,
+                double a20, double a21, double a22, double a23,
                 double a30, double a31, double a32, double a33){
             matrix = new double[width * height];
             matrix[0]  = a00;
