@@ -46,9 +46,9 @@ Vector3 Vector3::operator * (double k){
 
 Vector3 Vector3::operator * (Matrix3 m){
     Vector3 mul = Vector3();
-    mul.x = getElement(0,0) * v.x + getElement(1,0) * v.y + getElement(2,0) * v.z;
-    mul.y = getElement(0,1) * v.x + getElement(1,1) * v.y + getElement(2,1) * v.z;
-    mul.z = getElement(0,2) * v.x + getElement(1,2) * v.y + getElement(2,2) * v.z;
+    mul.x = m.getElement(0,0) * x + m.getElement(1,0) * y + m.getElement(2,0) * z;
+    mul.y = m.getElement(0,1) * x + m.getElement(1,1) * y + m.getElement(2,1) * z;
+    mul.z = m.getElement(0,2) * x + m.getElement(1,2) * y + m.getElement(2,2) * z;
     return mul;    
 }
 
@@ -183,8 +183,8 @@ Vector2 Vector2::operator * (double k){
 
 Vector2 Vector2::operator * (Matrix2 m){
     Vector2 mul = Vector2();
-    mul.x = getElement(0,0) * v.x + getElement(1,0) * v.y;
-    mul.y = getElement(0,1) * v.x + getElement(1,1) * v.y;
+    mul.x = m.getElement(0,0) * x + m.getElement(1,0) * y;
+    mul.y = m.getElement(0,1) * x + m.getElement(1,1) * y;
     return mul;    
 }
 
