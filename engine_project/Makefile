@@ -1,11 +1,28 @@
 CC=g++
-CFLAGS= -Wall 
+
 CFLAGSL=
 LDFLAGS=#-lGL -lGLU -lglut
 
-SOURCES= tester.cpp matrix.cpp
-OBJECTS=$(SOURCES:.c=.o)
+SRCDIR = src
+BUILDDIR = build
+TARGET = bin/runner
+
+SRCEXT := cpp
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+CFLAGS= -g -Wall 
+LIB =
+INC = -I include
+
 EXECUTABLE=exec
+
+$(TARGET): $(OBJECTS)
+  @echo " Linking..."
+  @echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+  @mkdir -p $(BUILDDIR)
+  @echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 all: $(SOURCES) $(EXECUTABLE)
 
