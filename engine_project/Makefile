@@ -1,30 +1,25 @@
 CC=g++
-
-CFLAGSL=
+CFLAGS=#-g -c -Wall  -lGL -lGLU -lglut -lGLEW
+CFLAGSL=#-lGL -lGLU -lglut -lGLEW
 LDFLAGS=#-lGL -lGLU -lglut
 
-SRCDIR = src
-BUILDDIR = build
-TARGET = bin/runner
+#SRCEXT = cpp
 
-SRCEXT := cpp
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS= -g -Wall 
-LIB =
-INC = -I include
+SOURCES = vector.cpp matrix.cpp matrixfactory.cpp tester_matrixf.cpp
 
-EXECUTABLE=exec
+#SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 
-$(TARGET): $(OBJECTS)
-  @echo " Linking..."
-  @echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+OBJECTS=$(SOURCES:.c=.o)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-  @mkdir -p $(BUILDDIR)
-  @echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
+#OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+
+EXECUTABLE= output
 
 all: $(SOURCES) $(EXECUTABLE)
+
+#all: g++ src/vector.cpp src/matrix.cpp src/matrixfactory.cpp test/tester_matrif.cpp -o test/test-factory
+
+#test-factory: $(CC) $(SOURCES) test/tester_matrixf.cpp -o test/tester-factory
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ $(CFLAGSL)
