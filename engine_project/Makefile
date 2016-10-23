@@ -1,33 +1,24 @@
-CC=g++
 CFLAGS=#-g -c -Wall  -lGL -lGLU -lglut -lGLEW
 CFLAGSL=#-lGL -lGLU -lglut -lGLEW
 LDFLAGS=#-lGL -lGLU -lglut
+OUT = lib/engine.a
+CC= g++
+ODIR = obj
+SDIR = src
+#INC = -Iinc
 
-#SOURCES = vector.cpp matrix.cpp matrixfactory.cpp tester_matrixf.cpp
+_OBJS = vector.o matrix.o matrixfactory.o
 
-#OBJECTS=$(SOURCES:.c=.o)
+OBJS = $(patsubst %,$(ODIR)/%,$(_OBJS))
 
-SRCDIR =src
-BUILDDIR =build
-TARGET =bin/runner
+$(ODIR)/%.o: $(SDIR)/%.cpp 
+	 $(CC) -c -o $@ $< $(CFLAGS) 
 
-SRCEXT = cpp
-
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-
-EXECUTABLE= output
-
-all: $(SOURCES) $(EXECUTABLE)
-
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ $(CFLAGSL)
-
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@ $(CFLAGSL)
+$(OUT): $(OBJS) 
+	 ar rvs $(OUT) $^
 
 .PHONY: clean
+
 clean:
-	$(RM) $(OBJECTS) $(EXECUTABLE)
-	$(RM) *.ppm
+	$(RM) $(ODIR)# $(EXECUTABLE)
+	#$(RM) *.ppm
