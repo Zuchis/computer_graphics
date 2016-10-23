@@ -7,9 +7,9 @@
 
 1. - run make:
 
-     `$ make`
+    `$ make`
 
-     This will build the library.
+    This will build the library.
 
 2. - build the desired target:
 
@@ -24,4 +24,5 @@
     or:
     
     `test/bin`
+
 ---
