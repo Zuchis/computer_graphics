@@ -28,9 +28,8 @@ class MatrixFactory{
         static Matrix3 CONVERT_2D_TO_3D_MATRIX(Matrix2 m);
         static Matrix4 CONVERT_3D_TO_4D_MATRIX(Matrix3 m);
 
+        static Matrix3 Create3DDualMatrix(Vector3 axis);
+
+        static Matrix3 CreateAxisRotation(double angle,Vector3 axis);
 };
-
-
-
-
 #endif

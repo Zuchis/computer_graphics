@@ -122,3 +122,18 @@ Matrix4 CONVERT_3D_TO_4D_MATRIX(Matrix3 m){
     converted.setElement(3,3,1.0);
     return converted;
 }
+
+Matrix3 MatrixFactory::Create3DDualMatrix(Vector3 a){
+    Matrix3 dual = Matrix3(0,a.z * -1,a.y,a.z,0,a.x * -1,a.y * -1,a.x,0);
+    return dual;
+}
+
+Matrix3 MatrixFactory::CreateAxisRotation(double angle,Vector3 axis){
+    double degAngle = (angle * M_PI) / 180;
+    double sin0 = sin(degAngle);
+    double cos0 = cos(degAngle);
+    Matrix3 Id = Create3DIdentity();
+    Matrix3 dualv0 = Create3DDualMatrix(axis.normalized());
+    Matrix3 Rv0 = Id + (sin0 * dualv0) + ((1 - cos0) * dualv0 * dualv0);
+    return Rv0;
+}
