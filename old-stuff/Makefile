@@ -1,11 +1,38 @@
-FLAGS =-lGL -lglut
+CC=g++
 
-all:
-	g++ blackScreen.cpp -o blackScreen $(FLAGS)	
-	
-snowman:
-	g++ snowman.cpp -o snowman $(FLAGS)	
+CFLAGSL=
+LDFLAGS=#-lGL -lGLU -lglut
 
+SRCDIR =src
+BUILDDIR =build
+TARGET =bin/runner
+
+SRCEXT := cpp
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+CFLAGS= #-g -Wall 
+LIB =
+INC =# -I include
+
+EXECUTABLE=exec
+
+$(TARGET): $(OBJECTS)
+  @echo " Linking..."
+  @echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+  @mkdir -p $(BUILDDIR)
+  @echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
+
+#all: $(SOURCES) $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ $(CFLAGSL)
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@ $(CFLAGSL)
+
+.PHONY: clean
 clean:
-	rm -f *.o *.swp core
-
+	$(RM) $(OBJECTS) $(EXECUTABLE)
+	$(RM) *.ppm
