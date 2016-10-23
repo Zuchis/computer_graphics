@@ -50,6 +50,7 @@ class Vector3{
         Vector3 normalized();
         void clean();
         void print();
+        friend std::ostream& operator << (std::ostream& os, const Vector& v);
 };
 
 

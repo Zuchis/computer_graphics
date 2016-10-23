@@ -3,10 +3,6 @@
 #include <limits>
 #include "vector.h"
 
-//std::ostream& operator << (std::ostream& os, const Vector& v){
-    //os << "( " << v.x << ", " << v.y << ", " << v.z << " )";
-    //return os;
-//}
 
 Vector3 Vector3::operator + (Vector3 v){
     return Vector3(x + v.x,
@@ -157,6 +153,11 @@ void Vector3::clean(){
 void Vector3::print(){
     clean();
     std::cout << "( " << x << ", " << y << ", " << z << " )" << std::endl;
+}
+
+std::ostream& operator << (std::ostream& os, const Vector& v){
+    os << "( " << v.x << ", " << v.y << ", " << v.z << " )";
+    return os;
 }
 
 // Vector 2D Implementations
