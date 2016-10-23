@@ -3,7 +3,7 @@
 ##Source code for the Engine Project and other stuff related to Computer Graphics
 
 ---
-**Building and Running Instructions: **
+**Building and Running Instructions:**
 
 1. - run make:
 
