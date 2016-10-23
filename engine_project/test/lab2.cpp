@@ -1,20 +1,6 @@
 #include <iostream>
-#include "matrixfactory.h"
+#include "engine.h"
 #include <cmath>
-
-//Matrix3 operator * (double k, const Matrix3 &m1) {
-    //int height = 3;
-    //int width =  3;
-    //Matrix3 m = Matrix3();
-    //int i, j, index;
-    //for (i = 0; i < height; i++) {
-        //for (j = 0; j < width; j++) {
-            //m.setElement(i,j,m1.getElement(i,j) * k);
-        //}
-    //}
-    //return m;
-//}
-
 
 int main(){
     Vector3 v0 = Vector3(1,0,0);
@@ -33,7 +19,7 @@ int main(){
     Rv2.print();
 
     std::cout << "Rv0 rotations: " << std::endl;
-    (Rv0 * v0).print();
+    std::cout << (Rv0 * v0) << std::endl;
     (Rv0 * v1).print();
     (Rv0 * v2).print();
     
