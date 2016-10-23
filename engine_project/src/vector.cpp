@@ -155,7 +155,8 @@ void Vector3::print(){
     std::cout << "( " << x << ", " << y << ", " << z << " )" << std::endl;
 }
 
-std::ostream& operator << (std::ostream& os, const Vector& v){
+std::ostream& operator << (std::ostream& os, const Vector3& v){
+    v.clean();
     os << "( " << v.x << ", " << v.y << ", " << v.z << " )";
     return os;
 }
@@ -275,8 +276,23 @@ double Vector2::dot (Vector2 v){
             y * v.y);
 }
 
+void Vector2::clean(){
+    double small = 1.0e-15;
+    if (x < small && -x < small)
+        x = 0.0;
+    if (y < small && -y < small)
+        y = 0.0;
+}
+
 void Vector2::print(){
+    clean();
     std::cout << "( " << x << ", " << y << " )" << std::endl;
+}
+
+std::ostream& operator << (std::ostream& os, const Vector2& v){
+    v.clean();
+    os << "( " << v.x << ", " << v.y  << " )";
+    return os;
 }
 
 // Vector 4 Implementations
@@ -445,3 +461,8 @@ void Vector4::print(){
     std::cout << "( " << x << ", " << y << ", " << z << ", " << w << " )" << std::endl;
 }
 
+std::ostream& operator << (std::ostream& os, const Vector4& v){
+    v.clean();
+    os << "( " << v.x << ", " << v.y << ", " << v.z << ", " << v.w << " )";
+    return os;
+}

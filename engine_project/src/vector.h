@@ -50,7 +50,7 @@ class Vector3{
         Vector3 normalized();
         void clean();
         void print();
-        friend std::ostream& operator << (std::ostream& os, const Vector& v);
+        friend std::ostream& operator << (std::ostream& os, const Vector3& v);
 };
 
 
@@ -94,6 +94,7 @@ class Vector2{
         Vector2 normalized();
         void clean();
         void print();
+        friend std::ostream& operator << (std::ostream& os, const Vector2& v);
 };
 
 class Vector4{
@@ -140,6 +141,7 @@ class Vector4{
         Vector4 normalized();
         void clean();
         void print();
+        friend std::ostream& operator << (std::ostream& os, const Vector4& v);
 };
 
 #endif
