@@ -3,23 +3,23 @@ CFLAGS=#-g -c -Wall  -lGL -lGLU -lglut -lGLEW
 CFLAGSL=#-lGL -lGLU -lglut -lGLEW
 LDFLAGS=#-lGL -lGLU -lglut
 
-#SRCEXT = cpp
+#SOURCES = vector.cpp matrix.cpp matrixfactory.cpp tester_matrixf.cpp
 
-SOURCES = vector.cpp matrix.cpp matrixfactory.cpp tester_matrixf.cpp
+#OBJECTS=$(SOURCES:.c=.o)
 
-#SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+SRCDIR =src
+BUILDDIR =build
+TARGET =bin/runner
 
-OBJECTS=$(SOURCES:.c=.o)
+SRCEXT = cpp
 
-#OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
 EXECUTABLE= output
 
 all: $(SOURCES) $(EXECUTABLE)
-
-#all: g++ src/vector.cpp src/matrix.cpp src/matrixfactory.cpp test/tester_matrif.cpp -o test/test-factory
-
-#test-factory: $(CC) $(SOURCES) test/tester_matrixf.cpp -o test/tester-factory
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ $(CFLAGSL)
