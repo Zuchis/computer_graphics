@@ -96,6 +96,19 @@ Matrix2 Matrix2::operator * (double k) {
     return m;
 }
 
+Matrix2 operator * (double k, const Matrix2 &m1) {
+    int height = 2;
+    int width =  2;
+    Matrix2 m = Matrix2();
+    int i, j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            m.setElement(i,j,m1.getElement(i,j) * k);
+        }
+    }
+    return m;
+}
+
 Matrix2 Matrix2::operator + (double k) {
     Matrix2 m = Matrix2();
     int i, j, index;
@@ -287,7 +300,22 @@ Matrix3 Matrix3::translated(){
     }
 }
 
+void Matrix3::clean(){
+    double eps = 1.0e-14;
+    int i,j,index;
+    double diff;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            index = getPosition(i,j);
+            diff = matrix[index];
+            if(diff < eps && -diff < eps)
+                matrix[index] = 0.0;;
+        }
+    }
+}
+
 void Matrix3::print(){
+    clean();
     std::cout << "|";
     int i,j;
     for (i = 0; i < height; i++) {
@@ -325,6 +353,20 @@ Matrix3 Matrix3::operator * (double k) {
     }
     return m;
 }
+
+Matrix3 operator * (double k, const Matrix3 &m1) {
+    int height = 3;
+    int width =  3;
+    Matrix3 m = Matrix3();
+    int i, j, index;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            m.setElement(i,j,m1.getElement(i,j) * k);
+        }
+    }
+    return m;
+}
+
 
 Matrix3 Matrix3::operator + (double k) {
     Matrix3 m = Matrix3();
@@ -565,6 +607,19 @@ Matrix4 Matrix4::operator * (double k) {
     return m;
 }
 
+Matrix4 operator * (double k, const Matrix4 &m1) {
+    int height = 4;
+    int width =  4;
+    Matrix4 m = Matrix4();
+    int i, j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            m.setElement(i,j,m1.getElement(i,j) * k);
+        }
+    }
+    return m;
+}
+
 Matrix4 Matrix4::operator + (double k) {
     Matrix4 m = Matrix4();
     int i, j, index;
@@ -656,14 +711,14 @@ Matrix4 Matrix4::operator * (Matrix4 m){
     return mul;
 }
 
-//Vector4 Matrix4::operator * (Vector4 v){
-    //Vector3 mul = Vector3();
-    //int i,j,k,index;
-    //mul.x = getElement(0,0) * v.x + getElement(0,1) * v.y + getElement(0,2) * v.z;
-    //mul.y = getElement(1,0) * v.x + getElement(1,1) * v.y + getElement(1,2) * v.z;
-    //mul.z = getElement(2,0) * v.x + getElement(2,1) * v.y + getElement(2,2) * v.z;
-    //return mul;    
-//}
+Vector4 Matrix4::operator * (Vector4 v){
+    Vector4 mul = Vector4();
+    mul.x = getElement(0,0) * v.x + getElement(0,1) * v.y + getElement(0,2) * v.z + getElement(0,3) * v.w;
+    mul.y = getElement(1,0) * v.x + getElement(1,1) * v.y + getElement(1,2) * v.z + getElement(1,3) * v.w;
+    mul.z = getElement(2,0) * v.x + getElement(2,1) * v.y + getElement(2,2) * v.z + getElement(2,3) * v.w;
+    mul.w = getElement(3,0) * v.x + getElement(3,1) * v.y + getElement(3,2) * v.z + getElement(3,3) * v.w;
+    return mul; 
+}
 
 bool Matrix4::operator == (const Matrix4 &m){
     double eps = std::numeric_limits<double>::epsilon();

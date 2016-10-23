@@ -6,6 +6,7 @@
 
 class Vector3;
 class Vector2;
+class Vector4;
 
 class Matrix2{
     private:
@@ -84,6 +85,7 @@ class Matrix2{
         Matrix2 operator * (Matrix2 m);
         Vector2 operator * (Vector2 v);
         Matrix2 operator * (double k);
+        friend Matrix2 operator * (double k, const Matrix2 &m1);
         Matrix2 operator / (double k);
         bool operator == (const Matrix2 &m);
         bool operator != (const Matrix2 &m);
@@ -164,6 +166,7 @@ class Matrix3{
         Matrix3 translated(); 
         double determinant();
         Matrix3 inverted();
+        void clean();
         void print();
         
         Matrix3 operator = (Matrix3 m);
@@ -174,6 +177,7 @@ class Matrix3{
         Matrix3 operator * (Matrix3 m);
         Vector3 operator * (Vector3 v);
         Matrix3 operator * (double k);
+        friend Matrix3 operator * (double k, const Matrix3 &m1);
         Matrix3 operator / (double k);
         bool operator == (const Matrix3 &m);
         bool operator != (const Matrix3 &m);
@@ -268,7 +272,8 @@ class Matrix4{
         Matrix4 operator - (Matrix4 m);
         Matrix4 operator - (double k);
         Matrix4 operator * (Matrix4 m);
-        //Vector4 operator * (Vector4 v);
+        friend Matrix4 operator * (double k, const Matrix4 &m1);
+        Vector4 operator * (Vector4 v);
         Matrix4 operator * (double k);
         Matrix4 operator / (double k);
         bool operator == (const Matrix4 &m);
