@@ -12,6 +12,8 @@
 #include "GL/glew.h"
 #include "GL/freeglut.h"
 
+#define VERTICES 0
+#define COLORS 1
 
 namespace GLSLShader {
     enum GLSLShaderType{
