@@ -1,9 +1,9 @@
 CC=g++
-CFLAGS=-c -Wall -g -lGL -lGLU -lglut -lGLEW
-CFLAGSL=-lGL -lGLU -lglut -lGLEW
+CFLAGS=-c -Wall -g -lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
+CFLAGSL=-lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
 LDFLAGS=#-lGL -lGLU -lglut
 
-SOURCES= hello2dworld.cpp
+SOURCES= tangram.cpp GLSLProgram.cpp
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=magic
 

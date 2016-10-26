@@ -141,14 +141,26 @@ typedef struct
 
 const Vertex Vertices[] = 
 {
-	{{ 0.25f, 0.25f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }},
-	{{ 0.50f, 0.25f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }},
-	{{ 0.50f, 0.75f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }}
+        // square
+        {{ 0.00f,  0.00f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }},
+
+        {{ 0.25f, 0.00f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }},
+
+        {{ 0.25f, 0.25f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }},
+
+        {{ 0.00f, 0.25f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }},
+
+        // triangle
+        {{ 0.25f, 0.00f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }},
+        {{ 0.50f, 0.00f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }},
+        {{ 0.50f, 0.50f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }}
 };
 
-const GLubyte Indices[] =
+const GLuint Indices[] =
 {
-	0,1,2
+	0,1,2,
+        2,3,0,
+        4,5,6
 };
 
 void createBufferObjects()
@@ -165,8 +177,8 @@ void createBufferObjects()
 		glEnableVertexAttribArray(COLORS);
 		glVertexAttribPointer(COLORS, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)sizeof(Vertices[0].XYZW));
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VboId[1]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VboId[1]);
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
 	}
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -213,10 +225,12 @@ void drawScene()
 	glUseProgram(ProgramId);
 
 	glUniformMatrix4fv(UniformId, 1, GL_TRUE, I);
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, (GLvoid*)0);
+        glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, (GLvoid*)0);
+        //glDrawArrays(GL_TRIANGLES, 0, 12);
 
-	glUniformMatrix4fv(UniformId, 1, GL_TRUE, M);
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, (GLvoid*)0);
+	//glUniformMatrix4fv(UniformId, 1, GL_TRUE, M);
+	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, (GLvoid*)0);
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glUseProgram(0);
 	glBindVertexArray(0);
