@@ -1,12 +1,34 @@
+#ifndef GLSLPROGRAM_H
+#define GLSLPROGRAM_H
+
+#include <fstream>
+#include <sstream>
+
+#include <string>
+
+#include <stdexcept>
+#include <iostream>
+
+#include "GL/glew.h"
+#include "GL/freeglut.h"
+
+
 namespace GLSLShader {
     enum GLSLShaderType{
-        VERTEX,FRAGMENT
+        VERTEX = GL_VERTEX_SHADER,
+        FRAGMENT = GL_FRAGMENT_SHADER
     };
+};
+
+class GLSLProgramException : public std::runtime_error {
+      public:
+        GLSLProgramException( const std::string & msg ) :
+        std::runtime_error(msg) { }
 };
 
 class GLSLProgram {
     private:
-        int handle;
+        GLuint handle;
         bool linked;
         std::string logString;
         int getUniformLocation(const char* name);
@@ -14,11 +36,12 @@ class GLSLProgram {
 
     public:
         GLSLProgram();
+        ~GLSLProgram();
 
-        bool compileShaderFromFile(const char* fileName, GLSLShader::GLSLShaderType type);
-        bool compileShaderFromString(const std::string& source, GLSLShader::GLSLShaderType type);
-        bool link();
-        void use();
+        void compileShaderFromFile(const char* fileName, GLSLShader::GLSLShaderType type) throw (GLSLProgramException);
+        void compileShaderFromString(const std::string& source, GLSLShader::GLSLShaderType type) throw (GLSLProgramException);
+        void link() throw (GLSLProgramException);
+        void use() throw (GLSLProgramException);
 
         std::string log();
 
@@ -36,3 +59,5 @@ class GLSLProgram {
         void printActiveAttribs();
         
 };
+
+#endif
