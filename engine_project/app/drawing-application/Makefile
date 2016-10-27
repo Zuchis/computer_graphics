@@ -3,7 +3,7 @@ CFLAGS=-c -Wall -g -lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
 CFLAGSL=-lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
 LDFLAGS=#-lGL -lGLU -lglut
 
-SOURCES= tangram.cpp GLSLProgram.cpp
+SOURCES= tangram.cpp shaderprogram.cpp vector.cpp matrix.cpp matrixfactory.cpp objects.cpp
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=magic
 

@@ -1,13 +1,13 @@
-#ifndef GLSLPROGRAM_H
-#define GLSLPROGRAM_H
+#ifndef SHADERPROGRAM_H
+#define SHADERPROGRAM_H
 
 #include <fstream>
 #include <sstream>
-
 #include <string>
-
 #include <stdexcept>
 #include <iostream>
+#include <unordered_map>
+#include "matrixfactory.h"
 
 #include "GL/glew.h"
 #include "GL/freeglut.h"
@@ -22,44 +22,43 @@ namespace GLSLShader {
     };
 };
 
-class GLSLProgramException : public std::runtime_error {
+class ShaderProgramException : public std::runtime_error {
       public:
-        GLSLProgramException( const std::string & msg ) :
+        ShaderProgramException( const std::string & msg ) :
         std::runtime_error(msg) { }
 };
 
-class GLSLProgram {
+class ShaderProgram {
     private:
-        GLuint handle;
+
+        GLuint programID;
         bool linked;
         std::string logString;
-        int getUniformLocation(const char* name);
-        bool fileExists (const std::string& fileName);
+        std::unordered_map<std::string,GLint> uniformIDs;
+
+        GLint getUniformLocation(const char* name);
 
     public:
-        GLSLProgram();
-        ~GLSLProgram();
+        ShaderProgram();
+        ~ShaderProgram();
 
-        void compileShaderFromFile(const char* fileName, GLSLShader::GLSLShaderType type) throw (GLSLProgramException);
-        void compileShaderFromString(const std::string& source, GLSLShader::GLSLShaderType type) throw (GLSLProgramException);
-        void link() throw (GLSLProgramException);
-        void use() throw (GLSLProgramException);
+        void compileShaderFromFile(const char* fileName, GLSLShader::GLSLShaderType type) throw (ShaderProgramException);
+        void compileShaderFromString(const std::string& source, GLSLShader::GLSLShaderType type) throw (ShaderProgramException);
+        void link() throw (ShaderProgramException);
+        void use() throw (ShaderProgramException);
 
         std::string log();
 
-        int getHandle();
+        int getProgramID();
         bool isLinked();
 
-        void bindAttribLocation(GLuint location, const char* name);
+            void bindAttribLocation(GLuint location, const char* name);
         void bindFragDataLocation(GLuint location, const char* name);
 
-        void setUniform(const char* name, float x, float y, float z);
-        void setUniform(const char* name, float val);
-        void setUniform(const char* name, int val);
-        void setUniform(const char* name, bool val);
-        void printActiveUniforms();
-        void printActiveAttribs();
-        
+        void setUniform(const char* name, float x, float y, float z, float w);
+        void setUniform(const char* name, float* vec);
+        void setUniform(const char* name, const GLfloat* m);
+        //void setUniform(const char* name, const float* m);
 };
 
 #endif

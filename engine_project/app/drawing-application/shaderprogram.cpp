@@ -1,51 +1,47 @@
-#include <fstream>
-#include <sstream>
+//#include <fstream>
+//#include <sstream>
 
-#include "GLSLProgram.h"
+#include "shaderprogram.h"
+//#include "engine.h"
 
 using std::ifstream;
 using std::ios;
 
-GLSLProgram::GLSLProgram(){
-    handle = 0;
+ShaderProgram::ShaderProgram(){
+    programID = 0;
     linked = false;
 }
 
-GLSLProgram::~GLSLProgram(){
+ShaderProgram::~ShaderProgram(){
     GLint numShaders = 0;
-    glGetProgramiv(handle, GL_ATTACHED_SHADERS, &numShaders);
+    glGetProgramiv(programID, GL_ATTACHED_SHADERS, &numShaders);
 
     GLuint * shaderNames = new GLuint[numShaders];
-    glGetAttachedShaders(handle, numShaders, NULL, shaderNames);
+    glGetAttachedShaders(programID, numShaders, NULL, shaderNames);
 
     // Deleting Shaders
     for (int i = 0; i < numShaders; i++)
         glDeleteShader(shaderNames[i]);
 
     // Deleting Program
-    glDeleteProgram (handle);
+    glDeleteProgram (programID);
 
     delete[] shaderNames;
 }
 
-void GLSLProgram::compileShaderFromFile(const char* fileName, GLSLShader::GLSLShaderType type)
-    throw( GLSLProgramException ){
-    if( ! fileExists(fileName) ){
-        std::string message = std::string("Shader: ") + fileName + " not found.";
-        throw GLSLProgramException(message);
-    }
-
-    if(handle <= 0 ) {
-        handle = glCreateProgram();
-        if(handle == 0) {
-            throw GLSLProgramException("Unable to create shader program.");
+void ShaderProgram::compileShaderFromFile(const char* fileName, GLSLShader::GLSLShaderType type)
+    throw( ShaderProgramException ){
+    if(programID <= 0 ) {
+        programID = glCreateProgram();
+        if(programID == 0) {
+            throw ShaderProgramException("Unable to create shader program.");
         }
     }
 
     ifstream inFile( fileName, ios::in );
     if( !inFile ) {
         std::string message = std::string("Unable to open: ") + fileName;
-        throw GLSLProgramException(message);
+        throw ShaderProgramException(message);
     }
 
     // Get file contents
@@ -54,25 +50,25 @@ void GLSLProgram::compileShaderFromFile(const char* fileName, GLSLShader::GLSLSh
     inFile.close();
 
     std::string source = code.str();
-    GLuint shaderHandle = glCreateShader(type);
+    GLuint shaderID = glCreateShader(type);
 
     const char * c_code = source.c_str();
-    glShaderSource(shaderHandle, 1, &c_code, NULL );
+    glShaderSource(shaderID, 1, &c_code, NULL );
 
     // Compile the shader
-    glCompileShader(shaderHandle);
+    glCompileShader(shaderID);
 
     // Check for errors
     int result;
-    glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &result );
+    glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result );
     if( GL_FALSE == result ) {
         int length = 0;
         std::string logString;
-        glGetShaderiv(shaderHandle, GL_INFO_LOG_LENGTH, &length );
+        glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length );
         if( length > 0 ) {
             char * c_log = new char[length];
             int written = 0;
-            glGetShaderInfoLog(shaderHandle, length, &written, c_log);
+            glGetShaderInfoLog(shaderID, length, &written, c_log);
             logString = c_log;
             delete [] c_log;
         }
@@ -84,72 +80,86 @@ void GLSLProgram::compileShaderFromFile(const char* fileName, GLSLShader::GLSLSh
         }
         msg += logString;
 
-        throw GLSLProgramException(msg);
+        throw ShaderProgramException(msg);
 
     } else {
-        glAttachShader(handle, shaderHandle);
+        glAttachShader(programID, shaderID);
     }
 }
 
-bool GLSLProgram::fileExists( const std::string & fileName ){
-    //struct stat info;
-    //int ret = -1;
-
-    //ret = stat(fileName.c_str(), &info);
-    //return ret == 0;
-    
-    return true;
+void ShaderProgram::bindAttribLocation(GLuint location, const char* name){
+    glBindAttribLocation(programID, location,name);
 }
 
-void GLSLProgram::bindAttribLocation(GLuint location, const char* name){
-    glBindAttribLocation(handle, location,name);
+void ShaderProgram::bindFragDataLocation(GLuint location, const char* name){
+    glBindFragDataLocation(programID, location,name);
 }
 
-void GLSLProgram::bindFragDataLocation(GLuint location, const char* name){
-    glBindFragDataLocation(handle, location,name);
+int ShaderProgram::getProgramID(){
+    return programID;
 }
 
-int GLSLProgram::getHandle(){
-    return handle;
-}
-
-bool GLSLProgram::isLinked(){
+bool ShaderProgram::isLinked(){
     return linked;
 }
 
-void GLSLProgram::link() throw(GLSLProgramException){
+void ShaderProgram::link() throw(ShaderProgramException){
     if( linked ) return;
-    if( handle <= 0 )
-        throw GLSLProgramException("Program has not been compiled.");
+    if( programID <= 0 )
+        throw ShaderProgramException("Program has not been compiled.");
 
-    glLinkProgram(handle);
+    glLinkProgram(programID);
 
     int status = 0;
-    glGetProgramiv( handle, GL_LINK_STATUS, &status);
-    if( GL_FALSE == status ) {
-        //Store log and return false
+    glGetProgramiv( programID, GL_LINK_STATUS, &status);
+    if(status == GL_FALSE) {
         int length = 0;
         std::string logString;
 
-        glGetProgramiv(handle, GL_INFO_LOG_LENGTH, &length );
+        glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &length );
 
         if( length > 0 ) {
             char * c_log = new char[length];
             int written = 0;
-            glGetProgramInfoLog(handle, length, &written, c_log);
+            glGetProgramInfoLog(programID, length, &written, c_log);
             logString = c_log;
             delete [] c_log;
         }
 
-        throw GLSLProgramException(std::string("Program link failed:\n") + logString);
+        throw ShaderProgramException(std::string("Program link failed:\n") + logString);
     } else {
         //uniformLocations.clear();
         linked = true;
     }
 }
 
-void GLSLProgram::use() throw(GLSLProgramException){
-    if(handle <= 0 || (! linked))
-        throw GLSLProgramException("Shader has not been linked");
-    glUseProgram(handle);
+void ShaderProgram::use() throw(ShaderProgramException){
+    if(programID <= 0 || (! linked))
+        throw ShaderProgramException("Shader has not been linked");
+    glUseProgram(programID);
 }
+
+GLint ShaderProgram::getUniformLocation(const char* name){
+    std::unordered_map<std::string,GLint>::iterator it;
+    it = uniformIDs.find(name);
+    if(it == uniformIDs.end())
+        uniformIDs[name] = glGetUniformLocation(programID,name);
+
+    return uniformIDs[name];
+}
+
+void ShaderProgram::setUniform(const char* name, float x, float y, float z, float w){
+    GLint uniformID = getUniformLocation(name);
+    glUniform4f(uniformID,(GLfloat)x,(GLfloat)y,(GLfloat)z,(GLfloat)w);
+}
+
+
+void ShaderProgram::setUniform(const char* name, const GLfloat* m){
+    GLint uniformID = getUniformLocation(name);
+    glUniformMatrix4fv(uniformID,1,GL_FALSE,m);
+}
+
+//void ShaderProgram::setUniform(const char* name, const float* m){
+    //GLint uniformID = getUniformLocation(name);
+    //glUniformMatrix4fv(uniformID,1,GL_FALSE,m);
+//}
