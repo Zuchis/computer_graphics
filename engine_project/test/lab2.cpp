@@ -3,14 +3,14 @@
 #include <cmath>
 
 int main(){
-    Vector3 v0 = Vector3(1,0,0);
-    Vector3 v1 = Vector3(0,2,0);
-    Vector3 v2 = Vector3(0,0,3);
-    double angle = 90.0;
+    Vector3 v0 = Vector3(1.0f,0.0f,0.0f);
+    Vector3 v1 = Vector3(0.0f,2.0f,0.0f);
+    Vector3 v2 = Vector3(0.0f,0.0f,3.0f);
+    float angle = 90.0f;
 
-    Matrix3 Rv0 = MatrixFactory::CreateAxisRotation(90,v0);
-    Matrix3 Rv1 = MatrixFactory::CreateAxisRotation(90,v1);
-    Matrix3 Rv2 = MatrixFactory::CreateAxisRotation(90,v2);
+    Matrix3 Rv0 = MatrixFactory::CreateAxisRotation(90.0f,v0);
+    Matrix3 Rv1 = MatrixFactory::CreateAxisRotation(90.0f,v1);
+    Matrix3 Rv2 = MatrixFactory::CreateAxisRotation(90.0f,v2);
 
     Rv0.print();
     std::cout << std::endl;
@@ -32,4 +32,26 @@ int main(){
     (Rv2 * v0).print();
     (Rv2 * v1).print();
     (Rv2 * v2).print();
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+    Vector3* vectors;// = new Vector3[3];
+    Vector3 lul[] = {Vector3(1,0,0), Vector3(0,1,0), Vector3(0,0,1)};
+    vectors = lul;
+    //vectors[0] = Vector3(1,0,0);
+    //vectors[1] = Vector3(0,1,0);
+    //vectors[2] = Vector3(0,0,1);
+    vectors[0].print();
+    Matrix3 _damn = MatrixFactory::Create3DIdentity();
+    Matrix4 damn = MatrixFactory::CONVERT_3D_TO_4D_MATRIX(_damn);
+    damn.setElement(3,-1.0f);
+    damn.print();
+    std::cout << std::endl;
+    float* son = damn.getData();
+    std::cout << son[0] << std::endl;
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+    Matrix4 tr = MatrixFactory::CreateTransformMatrix(-0.5f,-0.5f,0.0f,0.0f,1.0f);
+    tr.print();
 }
