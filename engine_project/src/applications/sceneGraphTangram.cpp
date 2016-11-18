@@ -40,8 +40,8 @@ Quaternion rotationQuaternion(1.0f,0.0f,0.0f,0.0f);
 std::unordered_map<std::string,Vector3> squirrelPositions, boxPositions;
 std::unordered_map<std::string,Quaternion> squirrelRotations, boxRotations;
 std::unordered_map<std::string,Vector3> pieceScales;
+std::unordered_map<std::string,Vector3> boxScales;
 std::string activeSceneGraph = "squirrel";
-
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -121,23 +121,13 @@ void createMeshes()
     checkOpenGLError("ERROR: Could not create VAOs and VBOs.");
 }
 
-// TODO solve this
 
 SceneNode *ground, *bigTriangle1, *bigTriangle2, *mediumTriangle, *smallTriangle1, *smallTriangle2, *square1, *paralelogram;
 SceneNode* suzanneNode;
 SceneNode* root;
 
 
-void destroyBufferObjects()
-{
-    //glBindVertexArray(VaoId[0]);
-    //glDisableVertexAttribArray(VERTICES);
-    //glDeleteBuffers(2, VboId);
-    //glDeleteVertexArrays(2, VaoId);
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    //glBindVertexArray(0);
-    //checkOpenGLError("ERROR: Could not destroy VAOs and VBOs.");
+void destroyBufferObjects(){
 }
 
 void initializeDictionaries(){
@@ -177,8 +167,8 @@ void initializeDictionaries(){
     squirrelPositions["paralelogram"] = v;
     squirrelRotations["paralelogram"] = q * Quaternion(180.0f,Vector3(0.0f,1.0f,0.0f));
 
-    v = Vector3(0.132f,0.68f,1.0f);
-    q = Quaternion(160.3f,z_axis);
+    v = Vector3(0.111f,0.64f,1.0f);
+    q = Quaternion(165.3f,z_axis);
     squirrelPositions["square"] = v;
     squirrelRotations["square"] = q * Quaternion(180.0f,Vector3(-1.0f,0.0f,0.0f));
 
@@ -194,13 +184,13 @@ void initializeDictionaries(){
     boxPositions["bigTriangle2"] = v;
     boxRotations["bigTriangle2"] = q;
 
-    v = Vector3(0.00f+offset,-0.19f,1.0f);
+    v = Vector3(0.13f+offset,-0.17f,1.0f);
     q = Quaternion(-110.0f,z_axis);
     boxPositions["mediumTriangle"] = v;
     boxRotations["mediumTriangle"] = q;
 
-    v = Vector3(0.35f+offset,-0.145f,1.0f);
-    q = Quaternion(147.8f,z_axis);
+    v = Vector3(0.38f+offset,-0.145f,1.0f);
+    q = Quaternion(145.3f,z_axis);
     boxPositions["smallTriangle1"] = v;
     boxRotations["smallTriangle1"] = q;
 
@@ -209,8 +199,8 @@ void initializeDictionaries(){
     boxPositions["smallTriangle2"] = v;
     boxRotations["smallTriangle2"] = q * Quaternion(180.0f,Vector3(-1.0f,0.0f,0.0f));
 
-    v = Vector3(0.37f+offset,-0.247f,1.0f);
-    q = Quaternion(-180.0f,z_axis);
+    v = Vector3(0.46f+offset,-0.237f,1.0f);
+    q = Quaternion(-179.0f,z_axis);
     boxPositions["paralelogram"] = v;
     boxRotations["paralelogram"] = q* Quaternion(180.0f,Vector3(0.0f,1.0f,0.0f));
 
@@ -225,7 +215,13 @@ void initializeDictionaries(){
     pieceScales["mediumTriangle"] = Vector3(0.20f,0.20f,0.20f); // 16
     pieceScales["smallTriangle"] = Vector3(0.1f,0.1f,0.1f);
     pieceScales["paralelogram"] = Vector3(0.15f,0.12f,0.12f); //0.1
-    pieceScales["square"] = Vector3(0.13f,0.13f,0.13f);
+    pieceScales["square"] = Vector3(0.13f,0.17f,0.13f);
+
+    boxScales["bigTriangle"] = Vector3(0.3f,0.3f,0.3f);
+    boxScales["mediumTriangle"] = Vector3(0.23f,0.23f,0.23f); // 16
+    boxScales["smallTriangle"] = Vector3(0.15f,0.17f,0.15f);
+    boxScales["paralelogram"] = Vector3(0.12f,0.15f,0.12f); //0.1
+    boxScales["square"] = Vector3(0.19f,0.17f,0.15f);
 
 
 
@@ -245,18 +241,15 @@ void createSquirrel() {
     root = scenegraph->getRoot();
     root->setShaderProgram(ShaderProgramManager::instance()->get("default"));
 
-
-    suzanneNode = scenegraph->createNode("suzanne");
-    suzanneNode->setMesh(MeshManager::instance()->get("suzanne"));
-    suzanneNode->setModelMatrix(math::CreateTransformMatrix( -0.50f,-0.2f,-2.5f,0.0f,1.0f));
-
     ground = scenegraph->createNode("ground");
     ground->setMesh(squareMesh);
     ground->setModelMatrix(math::translate(Vector3(0.0f,0.0f,0.0f)) *
                             Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)).toMatrix() *
                             math::scale(Vector3(4.0f,3.0f,0.4f)));
 
-    
+    suzanneNode = ground->createNode("suzanne");
+    suzanneNode->setMesh(MeshManager::instance()->get("suzanne"));
+
     bigTriangle1 = ground->createNode("triangle");
     bigTriangle1->setMesh(triangleMesh);
     bigTriangle1->setModelMatrix(math::translate(squirrelPositions["bigTriangle1"]) *
@@ -311,96 +304,6 @@ void createSquirrel() {
 
     SceneGraphManager::instance()->add("squirrel",scenegraph);
 }
-
-void createTanBox() {
-    SceneGraph* scenegraph = new SceneGraph();
-    scenegraph->setCamera(new ArcballCamera(UBO_BP));
-
-    scenegraph->getCamera()->setProjectionMatrix(
-            math::Perspective(30.0f, WinX / WinY, 0.1f, 100.0f));
-    
-    Mesh* squareMesh = MeshManager::instance()->get("square");
-    Mesh* triangleMesh = MeshManager::instance()->get("triangle");
-    Mesh* paralelMesh = MeshManager::instance()->get("paralel");
-
-    root = scenegraph->getRoot();
-    root->setShaderProgram(ShaderProgramManager::instance()->get("default"));
-
-    suzanneNode = scenegraph->createNode("suzanne");
-    suzanneNode->setMesh(MeshManager::instance()->get("suzanne"));
-    suzanneNode->setModelMatrix(math::CreateTransformMatrix( -0.50f,-0.2f,-2.5f,0.0f,1.0f));
-
-    ground = scenegraph->createNode("ground");
-    ground->setMesh(squareMesh);
-    ground->setModelMatrix(math::translate(Vector3(0.0f,0.0f,0.0f)) *
-                            Quaternion(90.0f,Vector3(-1.0f,0.0f,0.0f)).toMatrix() *
-                            math::scale(Vector3(4.0f,3.0f,0.4f)));
-
-    
-    bigTriangle1 = ground->createNode("triangle");
-    bigTriangle1->setMesh(triangleMesh);
-    bigTriangle1->setModelMatrix(math::translate(boxPositions["bigTriangle1"]) *
-                                 boxRotations["bigTriangle1"].toMatrix() *
-                                 math::scale(Vector3(0.3f,0.3f,0.3f)));
-
-    bigTriangle2 = ground->createNode("triangle");
-    bigTriangle2->setMesh(triangleMesh);
-    bigTriangle2->setModelMatrix(math::translate(boxPositions["bigTriangle2"]) *
-                                 boxRotations["bigTriangle2"].toMatrix() *
-                                 math::scale(Vector3(0.3f,0.3f,0.3f)));
-
-    mediumTriangle = ground->createNode("triangle");
-    mediumTriangle->setMesh(triangleMesh);
-    mediumTriangle->setModelMatrix(math::translate(boxPositions["mediumTriangle"]) *
-                                 boxRotations["mediumTriangle"].toMatrix() *
-                                 math::scale(Vector3(0.16f,0.16f,0.16f)));
-
-    smallTriangle1 = ground->createNode("triangle");
-    smallTriangle1->setMesh(triangleMesh);
-    smallTriangle1->setModelMatrix(math::translate(boxPositions["smallTriangle1"]) *
-                                 boxRotations["smallTriangle1"].toMatrix() *
-                                 math::scale(Vector3(0.1f,0.1f,0.1f)));
-
-    smallTriangle2 = ground->createNode("triangle");
-    smallTriangle2->setMesh(triangleMesh);
-    smallTriangle2->setModelMatrix(math::translate(boxPositions["smallTriangle2"]) *
-                                    math::rotate(180.0f,Vector3(-1.0f,0.0f,0.0f)) * boxRotations["smallTriangle2"].toMatrix() *
-                                    math::scale(Vector3(0.1f,0.1f,0.1f)));
-
-    paralelogram = ground->createNode("paralelogram");
-    paralelogram->setMesh(paralelMesh);
-    paralelogram->setModelMatrix(math::translate(boxPositions["paralelogram"]) *
-                                    math::rotate(180.0f,Vector3(0.0f,1.0f,0.0f)) * boxRotations["paralelogram"].toMatrix() *
-                                    math::scale(Vector3(0.1f,0.1f,0.1f)));
-
-    square1 = ground->createNode("square");
-    square1->setMesh(squareMesh);
-    square1->setModelMatrix(math::translate(boxPositions["square"]) *
-                            math::rotate(180.0f,Vector3(-1.0f,0.0f,0.0f)) * boxRotations["square"].toMatrix() *
-                            math::scale(Vector3(0.1f,0.1f,0.1f)));
-
-    ground->applyMatrixToChildren(math::translate(Vector3(0.0f,-0.15f,0.0f)) *
-                                    math::scale(Vector3(1.0f,1.5f,1.0f)));
-    
-
-    SceneGraphManager::instance()->add("tanbox",scenegraph);
-}
-
-void applyCameraMovement() {
-    //if(KeyBuffer::instance()->isKeyDown('w'))
-        //camera.computeKeyboardInputs(FORWARD,deltaTime);
-    
-    //if(KeyBuffer::instance()->isKeyDown('s'))
-        //camera.computeKeyboardInputs(BACKWARD,deltaTime);
-
-    //if(KeyBuffer::instance()->isKeyDown('a'))
-        //camera.computeKeyboardInputs(LEFT,deltaTime);
-
-    //if(KeyBuffer::instance()->isKeyDown('d'))
-        //camera.computeKeyboardInputs(RIGHT,deltaTime);
-    
-}
-
 
 void applyGroundMovement() {
     float angleStep = 0.05f * deltaTime;
@@ -461,8 +364,6 @@ void computeInterpolation() {
 
 void applyMotion() {
 
-    applyCameraMovement();
-
     applyGroundMovement();
 
     computeInterpolation();
@@ -486,10 +387,6 @@ void computeAngleAxis(){
     }
 }
 
-Matrix4 ortho = math::Ortho(-2.0f, 2.0f, -2.0f, 2.0f, 1.0f, 10.0f);
-
-GLfloat* projectionMatrix;
-
 void setViewProjectionMatrix() {
     Matrix4 translation = math::translate(Vector3(0.0f,0.0f,-distance));
     Matrix4 rotation    = rotationQuaternion.toMatrix();
@@ -501,15 +398,11 @@ void applyModelMatrix(SceneNode* node, std::string name, std::string pieceName, 
     Vector3 v(0.0f,0.0f,0.0f);
     v = math::lerp(squirrelPositions[name],boxPositions[name],t);
     q = math::lerp(squirrelRotations[name],boxRotations[name],t);
-    Vector3 s = pieceScales[pieceName];
-    //std::cout << s << std::endl;
-    //v.z = 0.0f;
+    Vector3 s = math::lerp(pieceScales[pieceName],boxScales[pieceName],t);
     node->setModelMatrix(math::translate(v) *
                       q.toMatrix() * 
                       math::scale(s));
 
-    //node->applyMatrix(math::translate(v) *
-                      //q.toMatrix());
 }
 
 void animate(float t) {
@@ -537,8 +430,12 @@ void drawSceneGraph() {
     animate(currentInterpolation);
 
     ground->applyMatrixToChildren(math::translate(Vector3(0.0f,1.0f,tamHeight)) *
-                                    math::rotate(90.0f,Vector3(1.0f,0.0f,0.0f)) *
-                                    math::scale(Vector3(1.0f,10.0f,1.0f)));
+                                  math::rotate(90.0f,Vector3(1.0f,0.0f,0.0f)) *
+                                  math::scale(Vector3(1.0f,10.0f,1.0f)));
+    
+    suzanneNode->setModelMatrix(math::translate(Vector3(0.0f,3.0f,tamHeight)) *
+                                  math::rotate(90.0f,Vector3(1.0f,0.0f,0.0f)) *
+                                  math::scale(Vector3(1.0f,10.0f,1.0f)));
 
     SceneGraphManager::instance()->get(activeSceneGraph)->draw();
 
@@ -554,28 +451,6 @@ void drawScene()
     glUseProgram(0);
     glBindVertexArray(0);
 
-    //checkOpenGLError("ERROR: Could not draw scene.");
-}
-
-//class updater : public IUpdatable {
-    //public:
-
-        //void update() {
-    //if(KeyBuffer::instance()->isKeyDown('w')){
-        //camera.computeKeyboardInputs(FORWARD,deltaTime);
-    //}
-    //if(KeyBuffer::instance()->isKeyDown('s'))
-        //camera.computeKeyboardInputs(BACKWARD,deltaTime);
-    //if(KeyBuffer::instance()->isKeyDown('a'))
-        //camera.computeKeyboardInputs(LEFT,deltaTime);
-    //if(KeyBuffer::instance()->isKeyDown('d'))
-        //camera.computeKeyboardInputs(RIGHT,deltaTime);
-        //}
-//};
-
-void createSimulation()
-{
-        //Simulation::instance()->add(new updater());
 }
 
 void cleanup()
@@ -747,8 +622,6 @@ void init(int argc, char* argv[])
         initializeDictionaries();
 
         createSquirrel();
-        //createTanBox();
-
 
 }
 
