@@ -185,6 +185,8 @@ namespace math {
                 return os;
             }
 
+            friend Vector3 lerp(Vector3 v, Vector3 u, float t);
+
     };
 
     Vector3 normalize(Vector3 v){
@@ -201,6 +203,13 @@ namespace math {
         return Vector3(u.y * v.z - u.z * v.y,
                 u.z * v.x - u.x * v.z,
                 u.x * v.y - u.y * v.x);
+    }
+
+    // t = 0 -> return v
+    Vector3 lerp(Vector3 v, Vector3 u, float t) {
+        return Vector3((1.0f - t) * v.x + t * u.x,
+                       (1.0f - t) * v.y + t * u.y,
+                       (1.0f - t) * v.z + t * u.z);
     }
 
     // Vector 2D Implementations

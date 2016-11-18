@@ -83,6 +83,10 @@ namespace engine {
                 }
 
             void setModelMatrix(math::Matrix4 matrix) {
+                    modelMatrix = matrix;
+            }
+
+            void applyMatrix(math::Matrix4 matrix) {
                     modelMatrix = matrix * modelMatrix;
             }
 

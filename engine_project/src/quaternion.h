@@ -123,23 +123,9 @@ namespace math {
                  return m4;
             }
 
-            friend Quaternion lerp(Quaternion q0, Quaternion q1, float k){
-                float cos_angle = q0.x*q1.x + q0.y*q1.y + q0.z*q1.z + q0.t*q1.t;
-                float k0 = 1.0f - k;
-                float k1 = (cos_angle > 0) ? k : -k;
-                Quaternion qi = (q0 * k0) + (q1 * k1);
-                qi.normalize();
-                return qi;
-            }
+            friend Quaternion lerp(Quaternion q0, Quaternion q1, float k);
 
-            friend Quaternion slerp(Quaternion q0, Quaternion q1, float k){
-                float angle = acos(q0.x*q1.x + q0.y*q1.y + q0.z*q1.z + q0.t*q1.t);
-                float k0 = sin((1-k)*angle) / sin(angle);
-                float k1 = sin(k*angle) / sin(angle);
-                Quaternion qi = (q0 * k0) + (q1 * k1);
-                qi.normalize();
-                return qi;
-            }
+            friend Quaternion slerp(Quaternion q0, Quaternion q1, float k);
 
             friend std::ostream& operator << (std::ostream& os, Quaternion q) {
                 os << "(" << q.t << ", " << q.x << ", " << q.y << ", " << q.z << ")";
@@ -155,6 +141,24 @@ namespace math {
     Quaternion normalize(Quaternion q){
         float s = 1 / q.norm();
         return q * s;
+    }
+
+    Quaternion lerp(Quaternion q0, Quaternion q1, float k){
+        float cos_angle = q0.x*q1.x + q0.y*q1.y + q0.z*q1.z + q0.t*q1.t;
+        float k0 = 1.0f - k;
+        float k1 = (cos_angle > 0) ? k : -k;
+        Quaternion qi = (q0 * k0) + (q1 * k1);
+        qi.normalize();
+        return qi;
+    }
+
+    Quaternion slerp(Quaternion q0, Quaternion q1, float k){
+        float angle = acos(q0.x*q1.x + q0.y*q1.y + q0.z*q1.z + q0.t*q1.t);
+        float k0 = sin((1-k)*angle) / sin(angle);
+        float k1 = sin(k*angle) / sin(angle);
+        Quaternion qi = (q0 * k0) + (q1 * k1);
+        qi.normalize();
+        return qi;
     }
 };
 
