@@ -16,15 +16,17 @@ GLfloat currentX, currentY;
 
 GLuint UBO_BP = 0;
 
-bool firstTimeMouse = true;
 bool leftMouseButtonPressed = false;
-bool perspectiveMode = true;
 
 float groundY, groundZ, groundX = 0.0f;
 float groundRot = 0.0f;
 float distance = 15;
-float interpolationFactor = 1.0f / 5.0f;
+float tamHeight = 7.0f;
+
+float animationDuration = 2.0f;
+float interpolationFactor = 1.0f / animationDuration;
 float currentInterpolation = 0.0f;
+bool  interpolationSwitch = false;
 
 float maxSpeed = 1.0f;
 float maxRotationSpeed = 3.0f;
@@ -37,7 +39,8 @@ Quaternion rotationQuaternion(1.0f,0.0f,0.0f,0.0f);
 
 std::unordered_map<std::string,Vector3> squirrelPositions, boxPositions;
 std::unordered_map<std::string,Quaternion> squirrelRotations, boxRotations;
-std::string activeSceneGraph = "tanbox";
+std::unordered_map<std::string,Vector3> pieceScales;
+std::string activeSceneGraph = "squirrel";
 
 
 /////////////////////////////////////////////////////////////////////// ERRORS
@@ -138,6 +141,93 @@ void destroyBufferObjects()
 }
 
 void initializeDictionaries(){
+    Vector3 v(0.0f,0.0f,0.0f);
+    Quaternion q(1.0f,0.0f,0.0f,0.0f);
+    Vector3 z_axis(0.0f,0.0f,1.0f);
+    float offset = -0.4f;
+
+    // Squirrel
+    v = Vector3(-0.31f,-0.3f,1.0f);
+    q = Quaternion(165.0f,z_axis);
+    squirrelPositions["bigTriangle1"] = v;
+    squirrelRotations["bigTriangle1"] = q;
+
+    v = Vector3(0.07f,-0.19f,1.0f);
+    q = Quaternion(125.0f,z_axis);
+    squirrelPositions["bigTriangle2"] = v;
+    squirrelRotations["bigTriangle2"] = q;
+
+    v = Vector3(-0.620f,0.14f,1.0f);
+    q = Quaternion(-20.0f,z_axis);
+    squirrelPositions["mediumTriangle"] = v;
+    squirrelRotations["mediumTriangle"] = q;
+
+    v = Vector3(-0.581f,0.278f,1.0f);
+    q = Quaternion(-67.0f,z_axis);
+    squirrelPositions["smallTriangle1"] = v;
+    squirrelRotations["smallTriangle1"] = q;
+
+    v = Vector3(0.32f,-0.43f,1.0f);
+    q = Quaternion(-35.0f,z_axis);
+    squirrelPositions["smallTriangle2"] = v;
+    squirrelRotations["smallTriangle2"] = q * Quaternion(180.0f,Vector3(-1.0f,0.0f,0.0f));
+
+    v = Vector3(0.33f,0.3f,1.0f);
+    q = Quaternion(127.0f,z_axis);
+    squirrelPositions["paralelogram"] = v;
+    squirrelRotations["paralelogram"] = q * Quaternion(180.0f,Vector3(0.0f,1.0f,0.0f));
+
+    v = Vector3(0.132f,0.68f,1.0f);
+    q = Quaternion(160.3f,z_axis);
+    squirrelPositions["square"] = v;
+    squirrelRotations["square"] = q * Quaternion(180.0f,Vector3(-1.0f,0.0f,0.0f));
+
+    // Box
+    
+    v = Vector3(0.8f+offset,0.1f,1.0f);
+    q = Quaternion(153.0f+60.0f,z_axis);
+    boxPositions["bigTriangle1"] = v;
+    boxRotations["bigTriangle1"] = q;
+
+    v = Vector3(0.37f+offset,0.522f,1.0f);
+    q = Quaternion(-60.0f,z_axis);
+    boxPositions["bigTriangle2"] = v;
+    boxRotations["bigTriangle2"] = q;
+
+    v = Vector3(0.00f+offset,-0.19f,1.0f);
+    q = Quaternion(-110.0f,z_axis);
+    boxPositions["mediumTriangle"] = v;
+    boxRotations["mediumTriangle"] = q;
+
+    v = Vector3(0.35f+offset,-0.145f,1.0f);
+    q = Quaternion(147.8f,z_axis);
+    boxPositions["smallTriangle1"] = v;
+    boxRotations["smallTriangle1"] = q;
+
+    v = Vector3(-0.1f+offset,0.3f,1.0f);
+    q = Quaternion(-60.0f,z_axis);
+    boxPositions["smallTriangle2"] = v;
+    boxRotations["smallTriangle2"] = q * Quaternion(180.0f,Vector3(-1.0f,0.0f,0.0f));
+
+    v = Vector3(0.37f+offset,-0.247f,1.0f);
+    q = Quaternion(-180.0f,z_axis);
+    boxPositions["paralelogram"] = v;
+    boxRotations["paralelogram"] = q* Quaternion(180.0f,Vector3(0.0f,1.0f,0.0f));
+
+    v = Vector3(0.15f+offset,0.1f,1.0f);
+    q = Quaternion(212.3f,z_axis);
+    boxPositions["square"] = v;
+    boxRotations["square"] = q;
+
+    // scales
+    
+    pieceScales["bigTriangle"] = Vector3(0.3f,0.3f,0.3f);
+    pieceScales["mediumTriangle"] = Vector3(0.20f,0.20f,0.20f); // 16
+    pieceScales["smallTriangle"] = Vector3(0.1f,0.1f,0.1f);
+    pieceScales["paralelogram"] = Vector3(0.15f,0.12f,0.12f); //0.1
+    pieceScales["square"] = Vector3(0.13f,0.13f,0.13f);
+
+
 
 }
 
@@ -155,9 +245,6 @@ void createSquirrel() {
     root = scenegraph->getRoot();
     root->setShaderProgram(ShaderProgramManager::instance()->get("default"));
 
-    Vector3 v(0.0f,0.0f,0.0f);
-    Quaternion q(1.0f,0.0f,0.0f,0.0f);
-    Vector3 z_axis(0.0f,0.0f,1.0f);
 
     suzanneNode = scenegraph->createNode("suzanne");
     suzanneNode->setMesh(MeshManager::instance()->get("suzanne"));
@@ -166,80 +253,58 @@ void createSquirrel() {
     ground = scenegraph->createNode("ground");
     ground->setMesh(squareMesh);
     ground->setModelMatrix(math::translate(Vector3(0.0f,0.0f,0.0f)) *
-                            Quaternion(90.0f,Vector3(-1.0f,0.0f,0.0f)).toMatrix() *
+                            Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)).toMatrix() *
                             math::scale(Vector3(4.0f,3.0f,0.4f)));
 
     
-    v = Vector3(-0.31f,-0.3f,1.0f);
-    q = Quaternion(165.0f,z_axis);
-    squirrelPositions["bigTriangle1"] = v;
-    squirrelRotations["bigTriangle1"] = q;
     bigTriangle1 = ground->createNode("triangle");
     bigTriangle1->setMesh(triangleMesh);
-    bigTriangle1->setModelMatrix(math::translate(v) *
-                                 q.toMatrix() *
+    bigTriangle1->setModelMatrix(math::translate(squirrelPositions["bigTriangle1"]) *
+                                 squirrelRotations["bigTriangle1"].toMatrix() *
                                  math::scale(Vector3(0.3f,0.3f,0.3f)));
 
-    v = Vector3(0.07f,-0.19f,1.0f);
-    q = Quaternion(125.0f,z_axis);
-    squirrelPositions["bigTriangle2"] = v;
-    squirrelRotations["bigTriangle2"] = q;
     bigTriangle2 = ground->createNode("triangle");
     bigTriangle2->setMesh(triangleMesh);
-    bigTriangle2->setModelMatrix(math::translate(v) *
-                                 q.toMatrix() *
+    bigTriangle2->setModelMatrix(math::translate(squirrelPositions["bigTriangle2"]) *
+                                 squirrelRotations["bigTriangle2"].toMatrix() *
                                  math::scale(Vector3(0.3f,0.3f,0.3f)));
 
-    v = Vector3(-0.637f,0.14f,1.0f);
-    q = Quaternion(-20.0f,z_axis);
-    squirrelPositions["mediumTriangle"] = v;
-    squirrelRotations["mediumTriangle"] = q;
     mediumTriangle = ground->createNode("triangle");
     mediumTriangle->setMesh(triangleMesh);
-    mediumTriangle->setModelMatrix(math::translate(v) *
-                                 q.toMatrix() *
+    mediumTriangle->setModelMatrix(math::translate(squirrelPositions["mediumTriangle"]) *
+                                 squirrelRotations["mediumTriangle"].toMatrix() *
                                  math::scale(Vector3(0.16f,0.16f,0.16f)));
 
-    v = Vector3(-0.581f,0.278f,1.0f);
-    q = Quaternion(-67.0f,z_axis);
-    squirrelPositions["smallTriangle1"] = v;
-    squirrelRotations["smallTriangle1"] = q;
     smallTriangle1 = ground->createNode("triangle");
     smallTriangle1->setMesh(triangleMesh);
-    smallTriangle1->setModelMatrix(math::translate(v) *
-                                 q.toMatrix() *
+    smallTriangle1->setModelMatrix(math::translate(squirrelPositions["smallTriangle1"]) *
+                                 squirrelRotations["smallTriangle1"].toMatrix() *
                                  math::scale(Vector3(0.1f,0.1f,0.1f)));
 
-    v = Vector3(0.20f,-0.35f,1.0f);
-    q = Quaternion(27.0f,z_axis);
-    squirrelPositions["smallTriangle2"] = v;
-    squirrelRotations["smallTriangle2"] = q;
     smallTriangle2 = ground->createNode("triangle");
     smallTriangle2->setMesh(triangleMesh);
-    smallTriangle2->setModelMatrix(math::translate(v) *
-                                    math::rotate(180.0f,Vector3(-1.0f,0.0f,0.0f)) * q.toMatrix() *
+    smallTriangle2->setModelMatrix(math::translate(squirrelPositions["smallTriangle2"]) *
+                                    squirrelRotations["smallTriangle2"].toMatrix() *
                                     math::scale(Vector3(0.1f,0.1f,0.1f)));
 
-    v = Vector3(0.33f,0.3f,1.0f);
-    q = Quaternion(90.0f,z_axis);
-    squirrelPositions["paralelogram"] = v;
-    squirrelRotations["paralelogram"] = q;
     paralelogram = ground->createNode("paralelogram");
     paralelogram->setMesh(paralelMesh);
-    paralelogram->setModelMatrix(math::translate(v) *
-                                    math::rotate(180.0f,Vector3(0.0f,1.0f,0.0f)) * q.toMatrix() *
+    paralelogram->setModelMatrix(math::translate(squirrelPositions["paralelogram"]) *
+                                    squirrelRotations["paralelogram"].toMatrix() *
                                     math::scale(Vector3(0.1f,0.1f,0.1f)));
 
-    v = Vector3(0.170f,0.53f,1.0f);
-    q = Quaternion(132.3f,z_axis);
-    squirrelPositions["square"] = v;
-    squirrelRotations["square"] = q;
     square1 = ground->createNode("square");
     square1->setMesh(squareMesh);
-    square1->setModelMatrix(math::translate(v) *
-                            math::rotate(180.0f,Vector3(-1.0f,0.0f,0.0f)) * q.toMatrix() *
+    square1->setModelMatrix(math::translate(squirrelPositions["square"]) *
+                            squirrelRotations["square"].toMatrix() *
                             math::scale(Vector3(0.1f,0.1f,0.1f)));
 
+
+    SceneNode* eye = mediumTriangle->createNode();
+    eye->setMesh(squareMesh);
+    eye->applyMatrix(math::translate(Vector3(0.5f,0.0f,1.0f)) *
+            math::scale(Vector3(0.1f,0.1f,0.1f)));
+    
     ground->applyMatrixToChildren(math::translate(Vector3(0.0f,-0.15f,0.0f)) *
                                     math::scale(Vector3(1.0f,1.5f,1.0f)));
     
@@ -261,11 +326,6 @@ void createTanBox() {
     root = scenegraph->getRoot();
     root->setShaderProgram(ShaderProgramManager::instance()->get("default"));
 
-    Vector3 v(0.0f,0.0f,0.0f);
-    Quaternion q(1.0f,0.0f,0.0f,0.0f);
-    Vector3 z_axis(0.0f,0.0f,1.0f);
-    float offset = -0.4f;
-
     suzanneNode = scenegraph->createNode("suzanne");
     suzanneNode->setMesh(MeshManager::instance()->get("suzanne"));
     suzanneNode->setModelMatrix(math::CreateTransformMatrix( -0.50f,-0.2f,-2.5f,0.0f,1.0f));
@@ -277,74 +337,46 @@ void createTanBox() {
                             math::scale(Vector3(4.0f,3.0f,0.4f)));
 
     
-    v = Vector3(0.8f+offset,0.1f,1.0f);
-    q = Quaternion(153.0f+60.0f,z_axis);
-    boxPositions["bigTriangle1"] = v;
-    boxRotations["bigTriangle1"] = q;
     bigTriangle1 = ground->createNode("triangle");
     bigTriangle1->setMesh(triangleMesh);
-    bigTriangle1->setModelMatrix(math::translate(v) *
-                                 q.toMatrix() *
+    bigTriangle1->setModelMatrix(math::translate(boxPositions["bigTriangle1"]) *
+                                 boxRotations["bigTriangle1"].toMatrix() *
                                  math::scale(Vector3(0.3f,0.3f,0.3f)));
 
-    v = Vector3(0.37f+offset,0.522f,1.0f);
-    q = Quaternion(-60.0f,z_axis);
-    boxPositions["bigTriangle2"] = v;
-    boxRotations["bigTriangle2"] = q;
     bigTriangle2 = ground->createNode("triangle");
     bigTriangle2->setMesh(triangleMesh);
-    bigTriangle2->setModelMatrix(math::translate(v) *
-                                 q.toMatrix() *
+    bigTriangle2->setModelMatrix(math::translate(boxPositions["bigTriangle2"]) *
+                                 boxRotations["bigTriangle2"].toMatrix() *
                                  math::scale(Vector3(0.3f,0.3f,0.3f)));
 
-    v = Vector3(0.28f+offset,-0.19f,1.0f);
-    q = Quaternion(-110.0f,z_axis);
-    boxPositions["mediumTriangle"] = v;
-    boxRotations["mediumTriangle"] = q;
     mediumTriangle = ground->createNode("triangle");
     mediumTriangle->setMesh(triangleMesh);
-    mediumTriangle->setModelMatrix(math::translate(v) *
-                                 q.toMatrix() *
+    mediumTriangle->setModelMatrix(math::translate(boxPositions["mediumTriangle"]) *
+                                 boxRotations["mediumTriangle"].toMatrix() *
                                  math::scale(Vector3(0.16f,0.16f,0.16f)));
 
-    v = Vector3(0.48f+offset,-0.145f,1.0f);
-    q = Quaternion(147.8f,z_axis);
-    boxPositions["smallTriangle1"] = v;
-    boxRotations["smallTriangle1"] = q;
     smallTriangle1 = ground->createNode("triangle");
     smallTriangle1->setMesh(triangleMesh);
-    smallTriangle1->setModelMatrix(math::translate(v) *
-                                 q.toMatrix() *
+    smallTriangle1->setModelMatrix(math::translate(boxPositions["smallTriangle1"]) *
+                                 boxRotations["smallTriangle1"].toMatrix() *
                                  math::scale(Vector3(0.1f,0.1f,0.1f)));
 
-    v = Vector3(0.14f+offset,0.1f,1.0f);
-    q = Quaternion(60.0f,z_axis);
-    boxPositions["smallTriangle2"] = v;
-    boxRotations["smallTriangle2"] = q;
     smallTriangle2 = ground->createNode("triangle");
     smallTriangle2->setMesh(triangleMesh);
-    smallTriangle2->setModelMatrix(math::translate(v) *
-                                    math::rotate(180.0f,Vector3(-1.0f,0.0f,0.0f)) * q.toMatrix() *
+    smallTriangle2->setModelMatrix(math::translate(boxPositions["smallTriangle2"]) *
+                                    math::rotate(180.0f,Vector3(-1.0f,0.0f,0.0f)) * boxRotations["smallTriangle2"].toMatrix() *
                                     math::scale(Vector3(0.1f,0.1f,0.1f)));
 
-    v = Vector3(0.511f+offset,-0.247f,1.0f);
-    q = Quaternion(-180.0f,z_axis);
-    boxPositions["paralelogram"] = v;
-    boxRotations["paralelogram"] = q;
     paralelogram = ground->createNode("paralelogram");
     paralelogram->setMesh(paralelMesh);
-    paralelogram->setModelMatrix(math::translate(v) *
-                                    math::rotate(180.0f,Vector3(0.0f,1.0f,0.0f)) * q.toMatrix() *
+    paralelogram->setModelMatrix(math::translate(boxPositions["paralelogram"]) *
+                                    math::rotate(180.0f,Vector3(0.0f,1.0f,0.0f)) * boxRotations["paralelogram"].toMatrix() *
                                     math::scale(Vector3(0.1f,0.1f,0.1f)));
 
-    v = Vector3(0.33f+offset,-0.01f,1.0f);
-    q = Quaternion(212.3f,z_axis);
-    boxPositions["square"] = v;
-    boxRotations["square"] = q;
     square1 = ground->createNode("square");
     square1->setMesh(squareMesh);
-    square1->setModelMatrix(math::translate(v) *
-                            math::rotate(180.0f,Vector3(-1.0f,0.0f,0.0f)) * q.toMatrix() *
+    square1->setModelMatrix(math::translate(boxPositions["square"]) *
+                            math::rotate(180.0f,Vector3(-1.0f,0.0f,0.0f)) * boxRotations["square"].toMatrix() *
                             math::scale(Vector3(0.1f,0.1f,0.1f)));
 
     ground->applyMatrixToChildren(math::translate(Vector3(0.0f,-0.15f,0.0f)) *
@@ -404,16 +436,36 @@ void applyGroundMovement() {
     else if (groundRot > 0.0f)
         groundRot -= angleStep;
 
+    if(KeyBuffer::instance()->isKeyDown('w'))
+        tamHeight += 0.005f;
+
+    if(KeyBuffer::instance()->isKeyDown('s'))
+        tamHeight -= 0.005f;
+
+}
+
+void computeInterpolation() {
+    float interpolationStep = interpolationFactor * deltaTime;
+
+    if(interpolationSwitch)
+        currentInterpolation += interpolationStep;
+    else
+        currentInterpolation -= interpolationStep;
+
+    if(currentInterpolation < 0.0f)
+        currentInterpolation = 0.0f;
+
+    if(currentInterpolation > 1.0f)
+        currentInterpolation = 1.0f;
 }
 
 void applyMotion() {
 
-    if(KeyBuffer::instance()->isKeyDown('p'))
-        perspectiveMode = !perspectiveMode;
-
     applyCameraMovement();
 
     applyGroundMovement();
+
+    computeInterpolation();
 }
 
 void computeTime() {
@@ -444,9 +496,50 @@ void setViewProjectionMatrix() {
     SceneGraphManager::instance()->get(activeSceneGraph)->getCamera()->setViewMatrix(translation * rotation);
 }
 
+void applyModelMatrix(SceneNode* node, std::string name, std::string pieceName, float t) {
+    Quaternion q(1.0f,0.0f,0.0f,0.0f);
+    Vector3 v(0.0f,0.0f,0.0f);
+    v = math::lerp(squirrelPositions[name],boxPositions[name],t);
+    q = math::lerp(squirrelRotations[name],boxRotations[name],t);
+    Vector3 s = pieceScales[pieceName];
+    //std::cout << s << std::endl;
+    //v.z = 0.0f;
+    node->setModelMatrix(math::translate(v) *
+                      q.toMatrix() * 
+                      math::scale(s));
+
+    //node->applyMatrix(math::translate(v) *
+                      //q.toMatrix());
+}
+
+void animate(float t) {
+
+    applyModelMatrix(bigTriangle1,"bigTriangle1","bigTriangle",t);
+
+    applyModelMatrix(bigTriangle2,"bigTriangle2","bigTriangle",t);
+
+    applyModelMatrix(mediumTriangle,"mediumTriangle","mediumTriangle",t);
+
+    applyModelMatrix(smallTriangle1,"smallTriangle1","smallTriangle",t);
+
+    applyModelMatrix(smallTriangle2,"smallTriangle2","smallTriangle",t);
+
+    applyModelMatrix(paralelogram,"paralelogram","paralelogram",t);
+
+    applyModelMatrix(square1,"square","square",t);
+
+}
+
 void drawSceneGraph() {
-    ground->setModelMatrix(math::translate(Vector3(groundX,groundY,groundZ)) *
+    ground->applyMatrix(math::translate(Vector3(groundX,groundY,groundZ)) *
                             math::rotate(groundRot,Vector3(-1.0f,0.0f,0.0f)));
+
+    animate(currentInterpolation);
+
+    ground->applyMatrixToChildren(math::translate(Vector3(0.0f,1.0f,tamHeight)) *
+                                    math::rotate(90.0f,Vector3(1.0f,0.0f,0.0f)) *
+                                    math::scale(Vector3(1.0f,10.0f,1.0f)));
+
     SceneGraphManager::instance()->get(activeSceneGraph)->draw();
 
 }
@@ -524,6 +617,8 @@ void timer(int value)
 
 void keyboardPress(unsigned char key, int x, int y) {
     KeyBuffer::instance()->pressKey(key);
+    if (key == 'g')
+        interpolationSwitch = !interpolationSwitch;
 }
 
 void keyboardPressSpecial(int key, int x, int y){
@@ -651,8 +746,8 @@ void init(int argc, char* argv[])
 
         initializeDictionaries();
 
-        //createSquirrel();
-        createTanBox();
+        createSquirrel();
+        //createTanBox();
 
 
 }
