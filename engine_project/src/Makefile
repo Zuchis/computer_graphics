@@ -3,7 +3,7 @@ CFLAGS=-c -Wall -g -std=c++0x -lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-sys
 CFLAGSL=-std=c++0x -lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
 LDFLAGS=#-lGL -lGLU -lglut
 
-SOURCES= applications/sceneGraphTangram.cpp
+SOURCES= applications/thesisApp.cpp
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=magic
 

@@ -130,6 +130,8 @@ namespace engine {
             }
 
         public:
+            static bool leftMouseButtonPressed;
+            static bool rightMouseButtonPressed;
             static KeyBuffer* instance() {
                 static KeyBuffer buffer;
                 return &buffer;
@@ -158,41 +160,10 @@ namespace engine {
             bool isSpecialKeyDown(int key) {
                 return specialKeys[key];
             }
-
     };
-
-    class IUpdatable {
-        public:
-            IUpdatable() {}
-
-            virtual void update() = 0;
-    };
-
-    class Simulation {
-        private:
-            std::vector<IUpdatable*> updaters;
-
-        protected:
-            Simulation() {}
-
-        public:
-            static Simulation* instance() {
-                static Simulation simulation;
-                return &simulation;
-            }
-
-            void add(IUpdatable* updater){
-                updaters.push_back(updater);
-            }
-
-            void update() {
-                if(!updaters.empty()) {
-                    for(int i = 0; i < (int)updaters.size(); i++)
-                        updaters[i]->update();
-                }
-            }
-    };
-
 };
+
+bool engine::KeyBuffer::leftMouseButtonPressed = false;
+bool engine::KeyBuffer::rightMouseButtonPressed = false;
 
 #endif
