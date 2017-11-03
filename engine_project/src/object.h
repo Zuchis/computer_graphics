@@ -73,6 +73,9 @@ namespace engine {
                         math::scale(scale)
                        );
             }
+
+            void update() {
+            }
     };
 };
 
