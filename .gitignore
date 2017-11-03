@@ -11,3 +11,5 @@
 *.a
 
 *.o
+
+engine_project/src/applications/sceneGraphExample.cpp
