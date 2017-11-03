@@ -24,7 +24,6 @@ void createShaderProgram()
 
 void createMeshes()
 {
-
     std::string tamSquare("objects/tamSquare.obj");
 
     Mesh *square = new Mesh(tamSquare);
@@ -52,10 +51,12 @@ void createSceneGraph() {
     root->setShaderProgram(ShaderProgramManager::instance()->get("default"));
 
     ground = scenegraph->createNode("ground");
+
     ground->setMesh(squareMesh);
-    ground->setModelMatrix(math::translate(Vector3(0.0f,0.0f,0.0f)) *
-            Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)).toMatrix() *
-            math::scale(Vector3(4.0f,3.0f,0.4f)));
+
+    ground->translateNode(Vector3(0.0f,0.0f,0.0f));
+    ground->rotateNode(Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)));
+    ground->scaleNode(Vector3(4.0f,3.0f,0.4f));
 
     SceneGraphManager::instance()->add("squirrel",scenegraph);
 }

@@ -6,6 +6,7 @@
 #include "mesh.h"
 #include "shaderprogram.h"
 #include "camera.h"
+#include "object.h"
 
 namespace engine {
 
@@ -38,18 +39,18 @@ namespace engine {
 
         public:
             std::vector<SceneNode*> children;
-            math::Matrix4 modelMatrix;
             Mesh* mesh;
             ShaderProgram* shaderProgram;
+            Object object;
             bool isRoot;
 
             SceneNode(std::string _tag = "") {
-                modelMatrix = math::Create4DIdentity();
                 mesh = nullptr;
                 shaderProgram = nullptr;
                 parent = nullptr;
                 isRoot = false;
                 tag = _tag;
+                object = Object(tag + " object");
             }
 
             SceneNode* createNode(std::string tag = "") {
@@ -60,6 +61,7 @@ namespace engine {
             }
 
             void setMesh(Mesh* _mesh) {
+                object.setMesh(_mesh);
                 mesh = _mesh;
             }
 
@@ -71,23 +73,27 @@ namespace engine {
                 parent = _parent;
             }
 
-            math::Matrix4 getModelMatrix(){
+            math::Matrix4 getModelMatrix() {
                 if(parent == nullptr || parent->isRoot)
-                    return modelMatrix;
+                    return object.modelMatrix();
 
                     if(parent->parent->isRoot){
-                        return parent->modelMatrix * modelMatrix;
+                        return parent->object.modelMatrix() * object.modelMatrix();
                     }
                     
-                    return parent->getModelMatrix() * modelMatrix;
-                }
-
-            void setModelMatrix(math::Matrix4 matrix) {
-                    modelMatrix = matrix;
+                    return parent->getModelMatrix() * object.modelMatrix();
             }
 
-            void applyMatrix(math::Matrix4 matrix) {
-                    modelMatrix = matrix * modelMatrix;
+            void translateNode(Vector3 t) {
+                object.translateObject(t);
+            }
+
+            void rotateNode(Quaternion r) {
+                object.rotateObject(r);
+            }
+
+            void scaleNode(Vector3 s) {
+                object.scaleObject(s);
             }
 
             void setTag(std::string _tag) {
@@ -119,15 +125,6 @@ namespace engine {
                         }
                     }
                 }
-
-            void applyMatrixToChildren(Matrix4 matrix) {
-                if (!children.empty()){
-                    int i;
-                    for (i = 0; i < (int)children.size(); i++) {
-                        children[i]->modelMatrix = matrix * children[i]->modelMatrix;
-                    }
-                }
-            }
     };
 
     class SceneGraph {
