@@ -117,7 +117,7 @@ namespace engine {
                     }
                     shaderProgram->use();
                     shaderProgram->setUniform("Matrix",this->getModelMatrix().getData());
-                    mesh->draw();
+                    object.draw();
                     if (!children.empty()){
                         int i;
                         for (i = 0; i < (int)children.size(); i++) {
