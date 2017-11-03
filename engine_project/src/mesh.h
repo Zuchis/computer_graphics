@@ -26,7 +26,7 @@ namespace engine {
     class Mesh {
         typedef std::array<float,3> vec3;
         typedef std::array<float,2> vec2;
-        private:
+        public:
             std::vector<vec3> vertices, normals;
             std::vector<vec2> texcoords;
             std::vector<Vector3> vertexData, normalData;
@@ -118,7 +118,6 @@ namespace engine {
                 normalIdx.clear();
             }
 
-        public:
             Mesh(std::string& filename) {
                 loadMeshData(filename);
                 processMeshData();
