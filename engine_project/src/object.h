@@ -29,7 +29,7 @@ namespace engine {
             Object(std::string _label = "unamed") {
                 translation = Vector3();
                 rotation = Quaternion(1.0f,0.0f,0.0f,0.0f);
-                scale = Vector3();
+                scale = Vector3(1.0f, 1.0f, 1.0f);
 
                 mesh = nullptr;
 
