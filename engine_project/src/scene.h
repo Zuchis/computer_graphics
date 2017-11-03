@@ -39,18 +39,16 @@ namespace engine {
 
         public:
             std::vector<SceneNode*> children;
-            Mesh* mesh;
             ShaderProgram* shaderProgram;
-            Object object;
+            Object* object;
             bool isRoot;
 
             SceneNode(std::string _tag = "") {
-                mesh = nullptr;
                 shaderProgram = nullptr;
                 parent = nullptr;
                 isRoot = false;
                 tag = _tag;
-                object = Object(tag + " object");
+                object = nullptr;
             }
 
             SceneNode* createNode(std::string tag = "") {
@@ -60,9 +58,12 @@ namespace engine {
                 return child;
             }
 
+            void setObject(Object* _object) {
+                object = _object;
+            }
+
             void setMesh(Mesh* _mesh) {
-                object.setMesh(_mesh);
-                mesh = _mesh;
+                object->setMesh(_mesh);
             }
 
             void setShaderProgram(ShaderProgram* _program) {
@@ -75,25 +76,25 @@ namespace engine {
 
             math::Matrix4 getModelMatrix() {
                 if(parent == nullptr || parent->isRoot)
-                    return object.modelMatrix();
+                    return object->modelMatrix();
 
                     if(parent->parent->isRoot){
-                        return parent->object.modelMatrix() * object.modelMatrix();
+                        return parent->object->modelMatrix() * object->modelMatrix();
                     }
                     
-                    return parent->getModelMatrix() * object.modelMatrix();
+                    return parent->getModelMatrix() * object->modelMatrix();
             }
 
             void translateNode(Vector3 t) {
-                object.translateObject(t);
+                object->translateObject(t);
             }
 
             void rotateNode(Quaternion r) {
-                object.rotateObject(r);
+                object->rotateObject(r);
             }
 
             void scaleNode(Vector3 s) {
-                object.scaleObject(s);
+                object->scaleObject(s);
             }
 
             void setTag(std::string _tag) {
@@ -106,8 +107,8 @@ namespace engine {
 
             void draw()
                 throw (RenderException) {
-                    if (mesh == nullptr) {
-                        throw RenderException("No Mesh set for the node " + tag);
+                    if (object == nullptr) {
+                        throw RenderException("No Object set for the node " + tag);
                     }
                     if (shaderProgram == nullptr) {
                         shaderProgram = getProgramFromParent();
@@ -117,7 +118,7 @@ namespace engine {
                     }
                     shaderProgram->use();
                     shaderProgram->setUniform("Matrix",this->getModelMatrix().getData());
-                    object.draw();
+                    object->draw();
                     if (!children.empty()){
                         int i;
                         for (i = 0; i < (int)children.size(); i++) {
