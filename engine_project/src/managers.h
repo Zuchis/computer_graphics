@@ -121,7 +121,7 @@ namespace engine {
         private:
             typedef std::unordered_map<std::string,Object*> Map;
 
-            Map map;
+            Map objects;
 
         protected:
             ObjectManager() {}
@@ -135,21 +135,29 @@ namespace engine {
             Object* get(std::string name)
             throw(RenderException) {
                 Map::iterator it;
-                it = map.find(name);
-                if (it == map.end()){
+                it = objects.find(name);
+                if (it == objects.end()){
                     throw(RenderException("No object called " + name + " found."));
                 }
 
-                return map[name];
+                return objects[name];
             }
 
             void add(std::string name, Object* object){
                 Map::iterator it;
-                it = map.find(name);
-                if (it != map.end()){
+                it = objects.find(name);
+                if (it != objects.end()){
                     std::cout << "Object already exists, replacing it..." << std::endl;
                 }
-                map[name] = object;
+                objects[name] = object;
+            }
+
+            void updateObjects() {
+                auto it = objects.begin();
+
+                for(it = objects.begin(); it != objects.end(); it++) {
+                    it->second->update();
+                }
             }
     };
 
