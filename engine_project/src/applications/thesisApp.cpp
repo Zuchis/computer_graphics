@@ -26,13 +26,21 @@ void createMeshes()
 {
     std::string tamSquare("objects/tamSquare.obj");
 
-    Mesh *square = new Mesh(tamSquare);
+    Mesh* square = new Mesh(tamSquare);
 
     square->create();
 
     MeshManager::instance()->add("square",square);
 
     checkOpenGLError("ERROR: Could not create VAOs and VBOs.");
+}
+
+void createObjects()
+{
+    Object* plane = new Object("plane");
+    plane->setMesh(MeshManager::instance()->get("square"));
+
+    ObjectManager::instance()->add("plane", plane);
 }
 
 SceneNode *ground;
@@ -45,14 +53,14 @@ void createSceneGraph() {
     scenegraph->getCamera()->setProjectionMatrix(
             math::Perspective(30.0f, winWidth / winHeight, 0.1f, 100.0f));
 
-    Mesh* squareMesh = MeshManager::instance()->get("square");
+    Object* plane = ObjectManager::instance()->get("plane");
 
     root = scenegraph->getRoot();
     root->setShaderProgram(ShaderProgramManager::instance()->get("default"));
 
     ground = scenegraph->createNode("ground");
 
-    ground->setMesh(squareMesh);
+    ground->setObject(plane);
 
     ground->translateNode(Vector3(0.0f,0.0f,0.0f));
     ground->rotateNode(Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)));
@@ -93,6 +101,8 @@ void init(int argc, char* argv[])
     createMeshes();
 
     createShaderProgram();
+
+    createObjects();
 
     createSceneGraph();
 }
