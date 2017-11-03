@@ -117,6 +117,42 @@ namespace engine {
             }
     };
 
+    class ObjectManager {
+        private:
+            typedef std::unordered_map<std::string,Object*> Map;
+
+            Map map;
+
+        protected:
+            ObjectManager() {}
+
+        public:
+            static ObjectManager* instance() {
+                static ObjectManager manager;
+                return &manager;
+            }
+
+            Object* get(std::string name)
+            throw(RenderException) {
+                Map::iterator it;
+                it = map.find(name);
+                if (it == map.end()){
+                    throw(RenderException("No object called " + name + " found."));
+                }
+
+                return map[name];
+            }
+
+            void add(std::string name, Object* object){
+                Map::iterator it;
+                it = map.find(name);
+                if (it != map.end()){
+                    std::cout << "Object already exists, replacing it..." << std::endl;
+                }
+                map[name] = object;
+            }
+    };
+
     class KeyBuffer {
         private:
 
