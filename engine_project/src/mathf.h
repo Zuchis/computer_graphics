@@ -3,7 +3,12 @@
 
 #include <cmath>
 
+#include "vector.h"
+
 namespace math {
+    #define MAX(x,y) (x > y ? x : y)
+
+    #define MIN(x,y) (x < y ? x : y)
 
     float floatThreshold = 1.0e-10;
 
@@ -25,6 +30,15 @@ namespace math {
         return difference < floatThreshold && -difference < floatThreshold;
     }
 
+    inline float clamp(float n, float minn, float maxn) {
+        return MIN(MAX(n, minn), maxn);
+    }
+
+    inline void clampVector(Vector3 v, float minn, float maxn) {
+        v.x = clamp(v.x, minn, maxn);
+        v.y = clamp(v.y, minn, maxn);
+        v.z = clamp(v.z, minn, maxn);
+    }
 };
 
 #endif

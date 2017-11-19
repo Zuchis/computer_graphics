@@ -1,5 +1,4 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#pragma once
 
 #include "GL/glew.h"
 #include "GL/freeglut.h"
@@ -22,9 +21,10 @@ namespace engine {
 
             std::string label;
 
-            Vector3 direction;
             Vector3 speed;
             Vector3 acceleration;
+
+            float reflectionFactor = 1.0f;
 
             Object(std::string _label = "unamed") {
                 translation = Vector3();
@@ -34,8 +34,7 @@ namespace engine {
                 mesh = nullptr;
 
                 label = _label;
-                
-                direction = Vector3();
+
                 speed = Vector3();
                 acceleration = Vector3();
             }
@@ -58,12 +57,24 @@ namespace engine {
                 translation = translation + t;
             }
 
+            void setTranslation(Vector3 t) {
+                translation =  t;
+            }
+
             void rotateObject(Quaternion r) {
                 rotation = r * rotation;
             }
 
+            void setRotation(Quaternion r) {
+                rotation = r;
+            }
+
             void scaleObject(Vector3 s) {
                 scale = scale + s;
+            }
+
+            void setScale(Vector3 s) {
+                scale = s;
             }
 
             Matrix4 modelMatrix() {
@@ -74,9 +85,48 @@ namespace engine {
                        );
             }
 
-            void update() {
+            virtual void update() {
+                std::cout << "Hey, I am an object!" << std::endl;
+            }
+
+            void calculateCollisionsWithBox(float xInf, float xSup, float yInf, float ySup, float zInf, float zSup) {
+                float bounceAmount = 0.01f;
+
+                if (translation.x < xInf) {
+                    speed = Vector3(-speed.x * reflectionFactor, speed.y * reflectionFactor, speed.z * reflectionFactor);
+                    acceleration = Vector3(-acceleration.x * reflectionFactor, acceleration.y  * reflectionFactor, acceleration.z * reflectionFactor);
+                    translation.x = translation.x + bounceAmount;
+                }
+
+                if (translation.x > xSup) {
+                    speed = Vector3(-speed.x * reflectionFactor, speed.y * reflectionFactor, speed.z * reflectionFactor);
+                    acceleration = Vector3(-acceleration.x * reflectionFactor, acceleration.y  * reflectionFactor, acceleration.z * reflectionFactor);
+                    translation.x = translation.x - bounceAmount;
+                }
+
+                if (translation.y < yInf) {
+                    speed = Vector3(speed.x * reflectionFactor, -speed.y * reflectionFactor, speed.z * reflectionFactor);
+                    acceleration = Vector3(acceleration.x * reflectionFactor, -acceleration.y  * reflectionFactor, acceleration.z * reflectionFactor);
+                    translation.y = translation.y + bounceAmount;
+                }
+
+                if (translation.y > ySup) {
+                    speed = Vector3(speed.x * reflectionFactor, -speed.y * reflectionFactor, speed.z * reflectionFactor);
+                    acceleration = Vector3(acceleration.x * reflectionFactor, -acceleration.y  * reflectionFactor, acceleration.z * reflectionFactor);
+                    translation.y = translation.y - bounceAmount;
+                }
+
+                if (translation.z < zInf) {
+                    speed = Vector3(speed.x * reflectionFactor, speed.y * reflectionFactor, -speed.z * reflectionFactor);
+                    acceleration = Vector3(acceleration.x * reflectionFactor, acceleration.y  * reflectionFactor, -acceleration.z * reflectionFactor);
+                    translation.z = translation.z + bounceAmount;
+                }
+
+                if (translation.z > zSup) {
+                    speed = Vector3(speed.x * reflectionFactor, speed.y * reflectionFactor, -speed.z * reflectionFactor);
+                    acceleration = Vector3(acceleration.x * reflectionFactor, acceleration.y  * reflectionFactor, -acceleration.z * reflectionFactor);
+                    translation.z = translation.z - bounceAmount;
+                }
             }
     };
 };
-
-#endif

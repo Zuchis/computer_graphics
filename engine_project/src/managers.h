@@ -143,6 +143,10 @@ namespace engine {
                 return objects[name];
             }
 
+            Map getObjects() {
+                return objects;
+            }
+
             void add(std::string name, Object* object){
                 Map::iterator it;
                 it = objects.find(name);
@@ -153,10 +157,19 @@ namespace engine {
             }
 
             void updateObjects() {
+
                 auto it = objects.begin();
 
                 for(it = objects.begin(); it != objects.end(); it++) {
                     it->second->update();
+                }
+            }
+
+            void calculateObjectsCollisionsWithBox(float xInf, float xSup, float yInf, float ySup, float zInf, float zSup) {
+                auto it = objects.begin();
+
+                for(it = objects.begin(); it != objects.end(); it++) {
+                    it->second->calculateCollisionsWithBox(xInf, xSup, yInf, ySup, zInf, zSup);
                 }
             }
     };

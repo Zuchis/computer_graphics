@@ -1,9 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-//TODO 
-// Finish the camera interface and the two classes
-
 #include <vector>
 
 #include <GL/glew.h>
@@ -32,11 +29,9 @@ enum WheelMovement {
 };
 
 class ICamera {
-    protected:
+    public:
         GLuint UBO_BP;
         GLuint matricesVbo;
-
-    public:
         ICamera(GLuint _UBO_BP) {
             UBO_BP = _UBO_BP;
             glGenBuffers(1,&matricesVbo);
@@ -68,7 +63,7 @@ class ArcballCamera : public ICamera {
         }
 };
 
-class Camera {
+class FPSCamera : public ICamera {
     private:
         void updateCameraVectors(){
             Vector3 _front = Vector3();
@@ -92,13 +87,26 @@ class Camera {
         GLfloat mouseSensitivity;
         GLfloat zoom;
 
-        Camera(Vector3 _position = Vector3(0.0f,0.0f,6.0f), Vector3 _up = Vector3(0.0f,1.0f,0.0f), GLfloat _yaw = (GLfloat)YAW, GLfloat _pitch = (GLfloat)PITCH) 
-            : front(Vector3(0.0f,0.0f,-1.0f)), movementSpeed((GLfloat)SPEED), mouseSensitivity((GLfloat)SENSITIVITY), zoom((GLfloat)ZOOM) {
+        FPSCamera(GLuint _UBO_BP, Vector3 _position = Vector3(0.0f,0.0f,3.0f), Vector3 _up = Vector3(0.0f,1.0f,0.0f), GLfloat _yaw = (GLfloat)YAW, GLfloat _pitch = (GLfloat)PITCH) 
+            : ICamera(_UBO_BP), front(Vector3(0.0f,0.0f,-1.0f)), movementSpeed((GLfloat)SPEED), mouseSensitivity((GLfloat)SENSITIVITY), zoom((GLfloat)ZOOM) {
             position = _position;
             worldUp = _up;
             yaw = _yaw;
             pitch = _pitch;
             updateCameraVectors();
+        }
+
+        virtual void setViewMatrix(Matrix4 viewMatrix) {
+            glBindBuffer(GL_UNIFORM_BUFFER, matricesVbo);
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(viewMatrix.data), viewMatrix.getData());
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        }
+
+        virtual void setProjectionMatrix(Matrix4 projectionMatrix) {
+            glBindBuffer(GL_UNIFORM_BUFFER, matricesVbo);
+            float* matrix = projectionMatrix.getData();
+            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(projectionMatrix.data), sizeof(projectionMatrix.data), matrix);
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
         }
 
         Matrix4 getViewMatrix(){

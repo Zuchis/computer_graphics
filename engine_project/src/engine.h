@@ -7,6 +7,7 @@
 #include "mesh.h"
 #include "shaderprogram.h"
 #include "managers.h"
+#include "object.h"
 
 using math::Quaternion;
 
@@ -17,7 +18,7 @@ namespace engine {
 
     char winCaption[] = "Goodbye UDESC";
 
-    float cameraDistance = 15;
+    float cameraDistance = 150.0f;
     float cameraDistanceStep = 1.5f;
 
     unsigned int FrameCount = 0;
@@ -25,9 +26,16 @@ namespace engine {
     GLfloat deltaTime = 0.0f;
     GLfloat oldTime = 0.0f;
 
+    GLfloat zoomFactor = 1.5f;
+
     GLfloat lastX = (GLfloat)(winWidth / 2);
     GLfloat lastY = (GLfloat)(winHeight / 2);
-    GLfloat currentX, currentY;
+
+    GLfloat currentX = lastX;
+    GLfloat currentY = lastY;
+
+    GLfloat deltaX = 0.0f;
+    GLfloat deltaY = 0.0f;
 
     GLuint UBO_BP = 0;
 
@@ -128,6 +136,7 @@ namespace engine {
     }
 
     void mousePress(int button, int state, int x, int y) {
+        zoomFactor = 0.0f;
 
         if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
             KeyBuffer::leftMouseButtonPressed = true;
@@ -138,13 +147,15 @@ namespace engine {
         if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
             KeyBuffer::leftMouseButtonPressed = false;
 
-        if (button == MOUSE_SCROLL_UP){
+        if (button == MOUSE_SCROLL_UP) {
             cameraDistance -= cameraDistanceStep;
+            zoomFactor = 1.5f;
         }
 
-        if (button == MOUSE_SCROLL_DOWN)
+        if (button == MOUSE_SCROLL_DOWN) {
             cameraDistance += cameraDistanceStep;
-
+            zoomFactor = -1.5f;
+        }
     }
 
     void computeTime() {
@@ -155,13 +166,16 @@ namespace engine {
 
     void computeAngleAxis(){
         if (currentX != lastX || currentY != lastY) {
-            float rotX = currentX - lastX; 
-            float rotY = currentY - lastY; 
-            Quaternion rotationQtrnY = Quaternion(rotX,math::Vector4(0.0f,1.0f,0.0f,1.0f));
-            Quaternion rotationQtrnX = Quaternion(rotY,math::Vector4(1.0f,0.0f,0.0f,1.0f));
+            deltaX = currentX - lastX; 
+            deltaY = currentY - lastY; 
+            Quaternion rotationQtrnY = Quaternion(deltaX,math::Vector4(0.0f,1.0f,0.0f,1.0f));
+            Quaternion rotationQtrnX = Quaternion(deltaY,math::Vector4(1.0f,0.0f,0.0f,1.0f));
             rotationQuaternion = rotationQtrnX * rotationQtrnY * rotationQuaternion;
             lastX = currentX;
             lastY = currentY;
+        } else {
+            deltaX = 0.0f;
+            deltaY = 0.0f;
         }
     }
 
@@ -213,7 +227,10 @@ namespace engine {
         }
     }
 
+    float timeSinceStart() {
+        return ((float)glutGet(GLUT_ELAPSED_TIME)) / 1000.0f;
+    }
+
 };
 
 #endif
-
