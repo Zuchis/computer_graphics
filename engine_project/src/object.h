@@ -96,36 +96,42 @@ namespace engine {
                     speed = Vector3(-speed.x * reflectionFactor, speed.y * reflectionFactor, speed.z * reflectionFactor);
                     acceleration = Vector3(-acceleration.x * reflectionFactor, acceleration.y  * reflectionFactor, acceleration.z * reflectionFactor);
                     translation.x = translation.x + bounceAmount;
+                    return;
                 }
 
                 if (translation.x > xSup) {
                     speed = Vector3(-speed.x * reflectionFactor, speed.y * reflectionFactor, speed.z * reflectionFactor);
                     acceleration = Vector3(-acceleration.x * reflectionFactor, acceleration.y  * reflectionFactor, acceleration.z * reflectionFactor);
                     translation.x = translation.x - bounceAmount;
+                    return;
                 }
 
                 if (translation.y < yInf) {
                     speed = Vector3(speed.x * reflectionFactor, -speed.y * reflectionFactor, speed.z * reflectionFactor);
                     acceleration = Vector3(acceleration.x * reflectionFactor, -acceleration.y  * reflectionFactor, acceleration.z * reflectionFactor);
                     translation.y = translation.y + bounceAmount;
+                    return;
                 }
 
                 if (translation.y > ySup) {
                     speed = Vector3(speed.x * reflectionFactor, -speed.y * reflectionFactor, speed.z * reflectionFactor);
                     acceleration = Vector3(acceleration.x * reflectionFactor, -acceleration.y  * reflectionFactor, acceleration.z * reflectionFactor);
                     translation.y = translation.y - bounceAmount;
+                    return;
                 }
 
                 if (translation.z < zInf) {
                     speed = Vector3(speed.x * reflectionFactor, speed.y * reflectionFactor, -speed.z * reflectionFactor);
                     acceleration = Vector3(acceleration.x * reflectionFactor, acceleration.y  * reflectionFactor, -acceleration.z * reflectionFactor);
                     translation.z = translation.z + bounceAmount;
+                    return;
                 }
 
                 if (translation.z > zSup) {
                     speed = Vector3(speed.x * reflectionFactor, speed.y * reflectionFactor, -speed.z * reflectionFactor);
                     acceleration = Vector3(acceleration.x * reflectionFactor, acceleration.y  * reflectionFactor, -acceleration.z * reflectionFactor);
                     translation.z = translation.z - bounceAmount;
+                    return;
                 }
             }
     };

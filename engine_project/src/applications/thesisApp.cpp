@@ -16,8 +16,6 @@ float ySup =  20.0f;
 float zInf = -20.0f;
 float zSup =  20.0f;
 
-//int lol;
-
 void createShaderProgram()
 {
     ShaderProgram *program = new ShaderProgram();
@@ -190,7 +188,7 @@ void createSceneGraph() {
         suzanne->speed = Vector3(0.015f, 0.025f, 0.0315f);
         suzanne->setTranslation(Vector3(x,y,z));
         suzanne->setRotation(Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)));
-        suzanne->setScale(Vector3(1.0f,1.0f,0.0f));
+        suzanne->setScale(Vector3(1.0f,1.0f,1.0f));
 
         suzanneNodes.push_back(scenegraph->createNode("parallel"));
         suzanneNodes[i]->setObject(suzanne);
@@ -322,11 +320,9 @@ float timeForAdding = 3;
 void drawScene()
 {
     currentTime = timeSinceStart();
-    if (currentTime - lastTime > timeForAdding) {
+    if (currentTime - lastTime >= timeForAdding) {
         lastTime = currentTime;
-
-        std::cout << "Ta pegando fogo bixo" << std::endl;
-        addRandomObject();
+        std::cout << currentTime << std::endl;
         updateAccelerations();
     }
 
@@ -376,7 +372,6 @@ void display()
     ++FrameCount;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     computeTime();
-    //computeInputs();
     computePhysics();
     drawScene();
     glutSwapBuffers();
@@ -398,7 +393,6 @@ void init(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-    std::cout << "oi" << std::endl;
     init(argc, argv);
     glutMainLoop();
     exit(EXIT_SUCCESS);

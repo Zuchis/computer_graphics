@@ -108,6 +108,10 @@ namespace engine {
         glViewport(0, 0, winWidth, winHeight);
     }
 
+    float timeSinceStart() {
+        return ((float)glutGet(GLUT_ELAPSED_TIME)) / 1000.0f;
+    }
+
     void timer(int value)
     {
         std::ostringstream oss;
@@ -115,6 +119,7 @@ namespace engine {
         std::string s = oss.str();
         glutSetWindow(currentWindow);
         glutSetWindowTitle(s.c_str());
+        std::cout << FrameCount << std::endl;
         FrameCount = 0;
         glutTimerFunc(1000, timer, 0);
     }
@@ -226,11 +231,6 @@ namespace engine {
             exit(EXIT_FAILURE);
         }
     }
-
-    float timeSinceStart() {
-        return ((float)glutGet(GLUT_ELAPSED_TIME)) / 1000.0f;
-    }
-
 };
 
 #endif
