@@ -1,6 +1,6 @@
 CC=g++
-CFLAGS=-c -Wall -g -std=c++0x -lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
-CFLAGSL=-std=c++0x -lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
+CFLAGS=-c -Wall -O0 -g -std=c++0x -lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
+CFLAGSL=-std=c++0x -O0 -lGL -lGLU -lglut -lGLEW #-lsfml-window -lsfml-system
 LDFLAGS=#-lGL -lGLU -lglut
 
 SOURCES= applications/thesisApp.cpp

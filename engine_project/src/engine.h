@@ -9,6 +9,8 @@
 #include "managers.h"
 #include "object.h"
 
+#include <cstdio>
+
 using math::Quaternion;
 
 namespace engine {
@@ -40,6 +42,9 @@ namespace engine {
     GLuint UBO_BP = 0;
 
     Quaternion rotationQuaternion(1.0f,0.0f,0.0f,0.0f);
+
+    FILE *logFile;
+    char frameStr[128];
 
     void setupGLUT(int argc, char* argv[])
     {
@@ -119,7 +124,8 @@ namespace engine {
         std::string s = oss.str();
         glutSetWindow(currentWindow);
         glutSetWindowTitle(s.c_str());
-        std::cout << FrameCount << std::endl;
+        //sprintf(frameStr, "%d", FrameCount);
+        //fprintf(logFile, 
         FrameCount = 0;
         glutTimerFunc(1000, timer, 0);
     }
@@ -210,6 +216,8 @@ namespace engine {
         setupGLEW();
         setupOpenGL();
         setupCallbacks();
+
+        logFile = fopen("log.txt", "w");
     }
 
     bool isOpenGLError() {

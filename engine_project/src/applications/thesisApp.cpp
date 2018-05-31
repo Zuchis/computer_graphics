@@ -2,6 +2,8 @@
 #include "../objects.h" 
 
 #include <algorithm>
+#include <time.h>
+#include <unistd.h>
 
 using namespace engine;
 
@@ -15,6 +17,44 @@ float yInf = -20.0f;
 float ySup =  20.0f;
 float zInf = -20.0f;
 float zSup =  20.0f;
+
+int frameCounter = 0;
+int totalFrames = 1000;
+
+size_t nObjects;
+
+struct timespec time_diff(struct timespec start, struct timespec end) {
+    struct timespec temp;
+    if ((end.tv_nsec-start.tv_nsec)<0) {
+        temp.tv_sec = end.tv_sec-start.tv_sec-1;
+        temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
+    } else {
+        temp.tv_sec = end.tv_sec-start.tv_sec;
+        temp.tv_nsec = end.tv_nsec-start.tv_nsec;
+    }
+    return temp;
+}
+
+void timekeeper_tic  (struct timespec *t1) {
+    clock_gettime(CLOCK_MONOTONIC_RAW, t1);
+}
+
+double time_diff_double(struct timespec start, struct timespec end) {
+    return time_diff(start, end).tv_sec + 1e-9 * time_diff(start, end).tv_nsec;
+}
+
+struct timespec draw_t1;
+struct timespec draw_t2;
+
+struct timespec update_t1;
+struct timespec update_t2;
+
+struct timespec colision_t1;
+struct timespec colision_t2;
+
+FILE *drawF     = fopen("tests/draw.log", "w+");
+FILE *updateF   = fopen("tests/update.log", "w+");
+FILE *colisionF = fopen("tests/colision.log", "w+");
 
 void createShaderProgram()
 {
@@ -105,8 +145,7 @@ vector<SceneNode*> parallelNodes;
 vector<SceneNode*> suzanneNodes;
 
 void createSceneGraph() {
-    int i;
-    int nObjects = 3;
+    size_t i;
     float lo = xInf + 1;
     float hi = xSup - 1;
     float x, y, z;
@@ -319,15 +358,17 @@ float timeForAdding = 3;
 
 void drawScene()
 {
-    currentTime = timeSinceStart();
-    if (currentTime - lastTime >= timeForAdding) {
-        lastTime = currentTime;
-        std::cout << currentTime << std::endl;
-        updateAccelerations();
-    }
-
     setViewProjectionMatrix();
+
+
+    timekeeper_tic(&draw_t1);
+
     SceneGraphManager::instance()->get("default")->draw();
+
+    timekeeper_tic(&draw_t2);
+
+    fprintf(drawF, "%f\n", time_diff_double(draw_t1, draw_t2) * 1000);
+
 
     glUseProgram(0);
     glBindVertexArray(0);
@@ -362,23 +403,47 @@ void computeInputs()
 
 void computePhysics()
 {
+    updateAccelerations();
+
+
+    timekeeper_tic(&update_t1);
+
     ObjectManager::instance()->updateObjects();
 
+    timekeeper_tic(&update_t2);
+
+    fprintf(updateF, "%f\n", time_diff_double(update_t1, update_t2) * 1000);
+
+
+    timekeeper_tic(&colision_t1);
+
     ObjectManager::instance()->calculateObjectsCollisionsWithBox(xInf, xSup, yInf, ySup, zInf, zSup);
+
+    timekeeper_tic(&colision_t2);
+
+    fprintf(colisionF, "%f\n", time_diff_double(colision_t1, colision_t2) * 1000);
 }
 
 void display()
 {
-    ++FrameCount;
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    computeTime();
-    computePhysics();
-    drawScene();
-    glutSwapBuffers();
+    if (frameCounter <= totalFrames + 1) {
+        ++FrameCount;
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        computeTime();
+        computePhysics();
+        drawScene();
+        glutSwapBuffers();
+        frameCounter++;
+    } else {
+        std::cout << "Parando após " << totalFrames << " execuções" << std::endl;
+        glutDestroyWindow(currentWindow);
+        exit(0);
+    }
 }
 
 void init(int argc, char* argv[])
 {
+    nObjects = atoi(argv[1]);
     engine_init(argc,argv);
     glutDisplayFunc(display);
 

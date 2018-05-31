@@ -877,25 +877,42 @@ namespace math {
 
             Matrix4 operator * (Matrix4 m){
                 Matrix4 mul = Matrix4();
-                int i,j,k,index;
+                unsigned int i,j,k;
                 float currentValue = 0.0f;
-                std::vector<float> r, c;
-                std::vector<float>::size_type size_;
-                for (i = 0; i < height; i++) {
-                    for (j = 0; j < width; j++) {
-                        r = row(i);
-                        c = m.column(j);
-                        size_ = c.size();
-                        for (k = 0; k < (int)size_; k++) {
-                            currentValue += r[k] * c[k];
+                for (i = 0; i < 4; i++) {
+                    for (j = 0; j < 4; j++) {
+                        for (k = 0; k < 4; k++) {
+                            currentValue += data[i + k * 4] * m.data[k + j * 4];
                         }
-                        index = getPosition(i,j);
-                        mul.setElement(index,currentValue);
+                        mul.data[i + j * 4] = currentValue;
                         currentValue = 0.0;
                     }
                 }
+
                 return mul;
             }
+
+            //Matrix4 operator * (Matrix4 m){
+                //Matrix4 mul = Matrix4();
+                //int i,j,k,index;
+                //float currentValue = 0.0f;
+                //std::vector<float> r, c;
+                //std::vector<float>::size_type size_;
+                //for (i = 0; i < height; i++) {
+                    //for (j = 0; j < width; j++) {
+                        //r = row(i);
+                        //c = m.column(j);
+                        //size_ = c.size();
+                        //for (k = 0; k < (int)size_; k++) {
+                            //currentValue += r[k] * c[k];
+                        //}
+                        //index = getPosition(i,j);
+                        //mul.setElement(index,currentValue);
+                        //currentValue = 0.0;
+                    //}
+                //}
+                //return mul;
+            //}
 
             Vector4 operator * (Vector4 v){
                 Vector4 mul = Vector4();

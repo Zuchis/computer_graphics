@@ -75,14 +75,10 @@ namespace engine {
             }
 
             math::Matrix4 getModelMatrix() {
-                if(parent == nullptr || parent->isRoot)
-                    return object->modelMatrix();
+                if(parent == nullptr)
+                    return math::Create4DIdentity();
 
-                    if(parent->parent->isRoot){
-                        return parent->object->modelMatrix() * object->modelMatrix();
-                    }
-                    
-                    return parent->getModelMatrix() * object->modelMatrix();
+                return parent->getModelMatrix() * object->modelMatrix();
             }
 
             void translateNode(Vector3 t) {
@@ -116,9 +112,10 @@ namespace engine {
                             throw RenderException("Could not find any shader program");
                         }
                     }
+                    float* modelMatrix = this->getModelMatrix().getData();
                     shaderProgram->use();
-                    shaderProgram->setUniform("Matrix",this->getModelMatrix().getData());
-                    object->draw();
+                    shaderProgram->setUniform("Matrix", modelMatrix);
+                    //object->draw();
                     if (!children.empty()){
                         int i;
                         for (i = 0; i < (int)children.size(); i++) {
