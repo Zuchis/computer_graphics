@@ -74,11 +74,15 @@ namespace engine {
                 parent = _parent;
             }
 
-            math::Matrix4 getModelMatrix() {
-                if(parent == nullptr)
-                    return math::Create4DIdentity();
+            //math::Matrix4 getModelMatrix() {
+                //if(parent == nullptr)
+                    //return math::Create4DIdentity();
 
-                return parent->getModelMatrix() * object->modelMatrix();
+                //return parent->getModelMatrix() * object->modelMatrix();
+            //}
+
+            math::Matrix4 getModelMatrix() {
+                return object->modelMatrix();
             }
 
             void translateNode(Vector3 t) {
@@ -113,8 +117,8 @@ namespace engine {
                         }
                     }
                     float* modelMatrix = this->getModelMatrix().getData();
-                    shaderProgram->use();
-                    shaderProgram->setUniform("Matrix", modelMatrix);
+                    //shaderProgram->use();
+                    //shaderProgram->setUniform("Matrix", modelMatrix);
                     //object->draw();
                     if (!children.empty()){
                         int i;

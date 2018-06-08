@@ -117,19 +117,6 @@ namespace engine {
         return ((float)glutGet(GLUT_ELAPSED_TIME)) / 1000.0f;
     }
 
-    void timer(int value)
-    {
-        std::ostringstream oss;
-        oss << winCaption << ": " << FrameCount << " FPS @ (" << winWidth << "x" << winHeight << ")";
-        std::string s = oss.str();
-        glutSetWindow(currentWindow);
-        glutSetWindowTitle(s.c_str());
-        //sprintf(frameStr, "%d", FrameCount);
-        //fprintf(logFile, 
-        FrameCount = 0;
-        glutTimerFunc(1000, timer, 0);
-    }
-
     void keyboardPress(unsigned char key, int x, int y) {
         KeyBuffer::instance()->pressKey(key);
     }
@@ -202,7 +189,6 @@ namespace engine {
     {
         glutIdleFunc(idle);
         glutReshapeFunc(reshape);
-        glutTimerFunc(0,timer,0);
         glutKeyboardFunc(keyboardPress);
         glutSpecialFunc(keyboardPressSpecial);
         glutKeyboardUpFunc(keyboardUp);

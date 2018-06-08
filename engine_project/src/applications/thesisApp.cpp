@@ -52,9 +52,10 @@ struct timespec update_t2;
 struct timespec colision_t1;
 struct timespec colision_t2;
 
-FILE *drawF     = fopen("tests/draw.log", "w+");
-FILE *updateF   = fopen("tests/update.log", "w+");
-FILE *colisionF = fopen("tests/colision.log", "w+");
+//FILE *drawF     = fopen("tests/draw.log", "w+");
+//FILE *updateF   = fopen("tests/update.log", "w+");
+//FILE *colisionF = fopen("tests/colision.log", "w+");
+FILE *fpsF      = fopen("tests/fps.log", "w+");
 
 void createShaderProgram()
 {
@@ -268,93 +269,10 @@ void updateAccelerations() {
     }
 }
 
-void addRandomObject() {
-    static int nRandom = 0;
-    vector<char> options = {'0', '1', '2', '3'};
-    std::random_shuffle(options.begin(), options.end());
-    char chosen = options[0];
-    std::string iter = std::to_string(nRandom);
-    auto scenegraph = SceneGraphManager::instance()->get("default");
-    float x, y, z;
-    float lo = xInf + 1;
-    float hi = xSup - 1;
-
-    x = nextRandom(lo, hi);
-    y = nextRandom(lo, hi);
-    z = nextRandom(lo, hi);
-
-    switch (chosen) {
-        case '0':
-          {
-            Plane* plane = new Plane("plane");
-            plane->setMesh(MeshManager::instance()->get("square"));
-            plane->speed = Vector3(0.001f, 0.002f, 0.003f);
-            plane->setTranslation(Vector3(x, y, z));
-            plane->setRotation(Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)));
-            plane->setScale(Vector3(5.0f, 0.5f, 5.0f));
-            ObjectManager::instance()->add("random" + iter, plane);
-            SceneNode* nodePlane = scenegraph->createNode("plane");
-            nodePlane->setObject(plane);
-            planeNodes.push_back(nodePlane);
-            break;
-          }
-
-        case '1':
-          {
-            Sphere* sphere = new Sphere("ball");
-            sphere->setMesh(MeshManager::instance()->get("sphere"));
-            sphere->speed = Vector3(0.01f, 0.02f, 0.03f);
-            sphere->setTranslation(Vector3(x,y,z));
-            sphere->setRotation(Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)));
-            sphere->setScale(Vector3(1.0f, 1.0f, 1.0f));
-            ObjectManager::instance()->add("random" + iter, sphere);
-            SceneNode* nodeSphere = scenegraph->createNode("sphere");
-            nodeSphere->setObject(sphere);
-            sphereNodes.push_back(nodeSphere);
-            break;
-          }
-
-        case '2':
-          {
-            Parallelogram* parallel = new Parallelogram("parallel");
-            parallel->setMesh(MeshManager::instance()->get("parallel"));
-            parallel->speed = Vector3(0.01f, 0.02f, 0.03f);
-            parallel->setTranslation(Vector3(x,y,z));
-            parallel->setRotation(Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)));
-            parallel->setScale(Vector3(1.0f,1.0f,0.0f));
-            ObjectManager::instance()->add("random" + iter, parallel);
-            SceneNode* nodeParallel = scenegraph->createNode("parallel");
-            nodeParallel->setObject(parallel);
-            parallelNodes.push_back(nodeParallel);
-            break;
-          }
-
-        case '3':
-          {
-            Suzanne* suzanne = new Suzanne("suzanne");
-            suzanne->setMesh(MeshManager::instance()->get("suzanne"));
-            suzanne->speed = Vector3(0.01f, 0.02f, 0.03f);
-            suzanne->setTranslation(Vector3(x,y,z));
-            suzanne->setRotation(Quaternion(0.0f,Vector3(-1.0f,0.0f,0.0f)));
-            suzanne->setScale(Vector3(1.0f,1.0f,0.0f));
-            ObjectManager::instance()->add("random" + iter, suzanne);
-            SceneNode* nodeSuzanne = scenegraph->createNode("suzanne");
-            nodeSuzanne->setObject(suzanne);
-            suzanneNodes.push_back(nodeSuzanne);
-            break;
-          }
-
-        default:
-            std::cout << "WHAT" << std::endl;
-    }
-    
-    nRandom++;
-}
-
 float lastTime = 0;
 float currentTime = 0;
 
-float timeForAdding = 3;
+float timeForEnding = 12;
 
 void drawScene()
 {
@@ -367,8 +285,7 @@ void drawScene()
 
     timekeeper_tic(&draw_t2);
 
-    fprintf(drawF, "%f\n", time_diff_double(draw_t1, draw_t2) * 1000);
-
+    //fprintf(drawF, "%f\n", time_diff_double(draw_t1, draw_t2) * 1000);
 
     glUseProgram(0);
     glBindVertexArray(0);
@@ -403,7 +320,7 @@ void computeInputs()
 
 void computePhysics()
 {
-    updateAccelerations();
+    //updateAccelerations();
 
 
     timekeeper_tic(&update_t1);
@@ -412,8 +329,7 @@ void computePhysics()
 
     timekeeper_tic(&update_t2);
 
-    fprintf(updateF, "%f\n", time_diff_double(update_t1, update_t2) * 1000);
-
+    //fprintf(updateF, "%f\n", time_diff_double(update_t1, update_t2) * 1000);
 
     timekeeper_tic(&colision_t1);
 
@@ -421,12 +337,17 @@ void computePhysics()
 
     timekeeper_tic(&colision_t2);
 
-    fprintf(colisionF, "%f\n", time_diff_double(colision_t1, colision_t2) * 1000);
+    //fprintf(colisionF, "%f\n", time_diff_double(colision_t1, colision_t2) * 1000);
 }
 
 void display()
 {
-    if (frameCounter <= totalFrames + 1) {
+    currentTime = timeSinceStart();
+    if (currentTime - lastTime >= timeForEnding) {
+        std::cout << "Parando após " << timeForEnding << " segundos" << std::endl;
+        glutDestroyWindow(currentWindow);
+        exit(0);
+    } else {
         ++FrameCount;
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         computeTime();
@@ -434,17 +355,48 @@ void display()
         drawScene();
         glutSwapBuffers();
         frameCounter++;
-    } else {
-        std::cout << "Parando após " << totalFrames << " execuções" << std::endl;
-        glutDestroyWindow(currentWindow);
-        exit(0);
     }
+}
+
+//void display()
+//{
+    //if (frameCounter <= totalFrames + 1) {
+        //++FrameCount;
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //computeTime();
+        //computePhysics();
+        //drawScene();
+        //glutSwapBuffers();
+        //frameCounter++;
+    //} else {
+        //std::cout << "Parando após " << totalFrames << " execuções" << std::endl;
+        //glutDestroyWindow(currentWindow);
+        //exit(0);
+    //}
+//}
+//
+
+void timer(int value)
+{
+    std::ostringstream oss;
+    oss << winCaption << ": " << FrameCount << " FPS @ (" << winWidth << "x" << winHeight << ")";
+    std::string s = oss.str();
+    glutSetWindow(currentWindow);
+    glutSetWindowTitle(s.c_str());
+
+    if (FrameCount != 0) {
+        fprintf(fpsF, "%d\n", FrameCount);
+    }
+
+    FrameCount = 0;
+    glutTimerFunc(1000, timer, 0);
 }
 
 void init(int argc, char* argv[])
 {
     nObjects = atoi(argv[1]);
     engine_init(argc,argv);
+    glutTimerFunc(0,timer,0);
     glutDisplayFunc(display);
 
     createMeshes();
